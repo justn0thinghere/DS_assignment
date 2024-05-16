@@ -41,6 +41,7 @@ public class Move {
         }else if(category.equals("heal")){
             hphealratio = 0.5;
         }else if(category.equals("sp")){
+            power = library.move_dmg.get(movename).get(lvl);
             atk = library.move_stat.get(movename).get("atk");
             def = library.move_stat.get(movename).get("def");
             sp = library.move_stat.get(movename).get("sp");
@@ -91,5 +92,61 @@ public class Move {
     }
     public String description(){
         return description;
+    }
+    public void showmovdetail(){
+        System.out.println("----Move Details----");
+        System.out.println(movename);
+        System.out.println("Category: " + category);
+        System.out.println("Move order: " + order);
+        if(category.equals("dmg")){
+            System.out.println("Move Power: " + power);
+        }else if(category.equals("heal")){
+            System.out.println("This move will heal your pokemon for 50% of its max hp");
+        }else if(category.equals("stat")){
+            if(atk!=0.0){
+                System.out.println("This move alters this pokemon's attack by " + (int)atk + " stages");
+            }
+            if(def!=0.0){
+                System.out.println("This move alters this pokemon's defense by " + (int)def + " stages");
+            }
+            if(sp!=0.0){
+                System.out.println("This move alters this pokemon's speed by " + (int)sp + " stages");
+            }
+            if(foe_atk!=0.0){
+                System.out.println("This move alters foe's pokemon's attack by " + (int)foe_atk + " stages");
+            }
+            if(foe_def!=0.0){
+                System.out.println("This move alters foe's pokemon's defense by " + (int)foe_def + " stages");
+            }
+            if(foe_sp!=0.0){
+                System.out.println("This move alters foe's pokemon's speed by " + (int)foe_sp + " stages");
+            }
+        }else if(category.equals("sp")){
+            if(power!=0){
+                System.out.println("Move Power: " + power);
+            }
+            if(atk!=0.0){
+                System.out.println("This move alters this pokemon's attack by " + (int)atk + " stages");
+            }
+            if(def!=0.0){
+                System.out.println("This move alters this pokemon's defense by " + (int)def + " stages");
+            }
+            if(sp!=0.0){
+                System.out.println("This move alters this pokemon's speed by " + (int)def + " stages");
+            }
+            if(foe_atk!=0.0){
+                System.out.println("This move alters foe's pokemon's attack by " + (int)foe_atk + " stages");
+            }
+            if(foe_def!=0.0){
+                System.out.println("This move alters foe's pokemon's defense by " + (int)foe_def + " stages");
+            }
+            if(foe_sp!=0.0){
+                System.out.println("This move alters foe's pokemon's speed by " + (int)foe_sp + " stages");
+            }
+            if(dmghealratio!=0.0){
+                System.out.println("This move heals your pokemon by " + dmghealratio*100 + " % of damage dealt");
+            }
+        }
+        System.out.println(description());
     }
 }

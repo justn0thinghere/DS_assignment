@@ -7,6 +7,7 @@ package pokemon_kanto_adventure;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -14,6 +15,7 @@ import java.util.HashMap;
  * @author User
  */
 public class library {
+    protected static Map<String,Integer> kantoMap = new Map<>();
     protected static HashMap<String, HashMap<Integer, Integer>> pokemonhp = new HashMap<>();
     protected static HashMap<String,String> evolution = new HashMap<>();
     protected static HashMap<String,Integer> evo_lvl = new HashMap<>();
@@ -48,6 +50,7 @@ public class library {
         readpokemontype();
         readpokemonweight();
         readmovedescription();
+        initializeMap();
     }
     public static void readpokemonhp(){
         try{
@@ -345,6 +348,32 @@ public class library {
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+    public static void initializeMap() {
+        kantoMap.addCity("Pallet Town");
+        kantoMap.addCity("Viridian City");
+        kantoMap.addCity("Pewter City");
+        kantoMap.addCity("Cerulean City");
+        kantoMap.addCity("Saffron City");
+        kantoMap.addCity("Celadon City");
+        kantoMap.addCity("Lavender Town");
+        kantoMap.addCity("Vermillion City");
+        kantoMap.addCity("Fuschia City");
+        kantoMap.addCity("Cinnabar Island");
+        kantoMap.addPath("Pallet Town", "Viridian City", 5);
+        kantoMap.addPath("Pallet Town", "Cinnabar Island", 7);
+        kantoMap.addPath("Viridian City", "Pewter City", 8);
+        kantoMap.addPath("Pewter City","Cerulean City", 12);
+        kantoMap.addPath("Cerulean City","Saffron City", 6);
+        kantoMap.addPath("Cerulean City","Lavender Town", 9);
+        kantoMap.addPath("Saffron City","Lavender Town", 3);
+        kantoMap.addPath("Saffron City","Celadon City", 4);
+        kantoMap.addPath("Saffron City","Vermillion City", 3);
+        kantoMap.addPath("Vermillion City","Lavender Town", 5);
+        kantoMap.addPath("Fuschia City","Lavender Town", 11);
+        kantoMap.addPath("Vermillion City","Fuschia City", 7);
+        kantoMap.addPath("Celadon City","Fuschia City", 10);
+        kantoMap.addPath("Fuschia City","Cinnabar Island", 5);
     }
     
 }

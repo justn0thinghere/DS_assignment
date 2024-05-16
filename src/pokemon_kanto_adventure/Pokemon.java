@@ -146,6 +146,7 @@ public class Pokemon {
         return currentxp;
     }
     public void showPokemonInfo(){
+        System.out.println("-----Pokemon Info-----");
         System.out.println(findname());
         System.out.println("Lvl: " + findlvl());
         System.out.printf("HP: %d/%d\n",findcurrenthp(),findmaxhp());
@@ -242,6 +243,17 @@ public class Pokemon {
             currenthp = currenthp + h;
         }
         System.out.println("Current hp: " + currenthp + " / " + maxhp);
+    }
+    
+    public void fullheal(){
+        System.out.println("--------------------------");
+        currenthp = maxhp;
+        System.out.println(name + " is healed to full hp");
+    }
+    
+    public void fullres(){
+        faint = false;
+        currenthp = maxhp;
     }
     public void revive(){
         System.out.println("--------------------------");

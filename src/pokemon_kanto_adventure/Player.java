@@ -13,8 +13,10 @@ import java.util.Scanner;
  * @author User
  */
 public class Player {
+    
     private String name;
     private String [] badges = new String[8];
+    int numofbadge;
     private Pokemon pokemon1;
     private Pokemon pokemon2;
     private Pokemon pokemon3;
@@ -27,6 +29,7 @@ public class Player {
     private int rivalracewins;
     private int battlewon;
     private ArrayList<Pokemon> PC;
+    private String currentCity;
     public Player(String n){
         name = n;
         for(int i = 0;i<8;i++){
@@ -50,7 +53,9 @@ public class Player {
         items.put("X Defend", 0);
         items.put("X Speed", 0);
         items.put("Revive",0);
+        numofbadge = 0;
         PC = new ArrayList<Pokemon>();
+        currentCity = "Pallet Town";
     }
     public void addPokemon(Pokemon a){
         if(pokemon1==null){
@@ -94,6 +99,12 @@ public class Player {
     public Pokemon findPoke6(){
         return pokemon6;
     }
+    public String findCurrentCity(){
+        return currentCity;
+    }
+    public void movetoCity(String city){
+        currentCity = city;
+    }
     public void obtainbadge(String badge){
         if(badge.equals("Boulder Badge")){
             badges[0] = badge;
@@ -111,6 +122,10 @@ public class Player {
             badges[6] = badge;
         }else if(badge.equals("Earth Badge")){
             badges[7] = badge;
+        }
+        numofbadge++;
+        if(numofbadge==8){
+            System.out.println("Congrats!! you have finished the game and won against all the gym leaders, you are now the new Champion of the Kanto Region!!");
         }
     }
     public void showbadges(){
@@ -209,15 +224,16 @@ public class Player {
         while(true){
             showteam();
             System.out.println("Choose a pokemon(1-6)/7 to exit: ");
-            int choice = input.nextInt();
-            input.nextLine();
+            String choice_st = input.nextLine();
+            if(isNum(choice_st)){
+            int choice = Integer.parseInt(choice_st);
             switch(choice){
                 case 1:
                     if(pokemon1==null){
                         System.out.println("--------------------------");
                         System.out.println("There is no pokemon in this slot");
                     }else{
-                        choice(pokemon1,1);
+                        pokechoice(pokemon1,1);
                     }
                     break;
                 case 2:
@@ -225,7 +241,7 @@ public class Player {
                         System.out.println("--------------------------");
                         System.out.println("There is no pokemon in this slot");
                     }else{
-                        choice(pokemon2,2);
+                        pokechoice(pokemon2,2);
                     }
                     break;
                 case 3:
@@ -233,7 +249,7 @@ public class Player {
                         System.out.println("--------------------------");
                         System.out.println("There is no pokemon in this slot");
                     }else{
-                        choice(pokemon3,3);
+                        pokechoice(pokemon3,3);
                     }
                     break;
                 case 4:
@@ -241,7 +257,7 @@ public class Player {
                         System.out.println("--------------------------");
                         System.out.println("There is no pokemon in this slot");
                     }else{
-                        choice(pokemon4,4);
+                        pokechoice(pokemon4,4);
                     }
                     break;
                 case 5:
@@ -249,7 +265,7 @@ public class Player {
                         System.out.println("--------------------------");
                         System.out.println("There is no pokemon in this slot");
                     }else{
-                        choice(pokemon5,5);
+                        pokechoice(pokemon5,5);
                     }
                     break;
                 case 6:
@@ -257,15 +273,20 @@ public class Player {
                         System.out.println("--------------------------");
                         System.out.println("There is no pokemon in this slot");
                     }else{
-                        choice(pokemon6,6);
+                        pokechoice(pokemon6,6);
                     }
                     break;
                 case 7:
                     break all;
+                default:
+                    System.out.println("Invalid choice");
+            }
+            }else{
+                System.out.println("Invalid input format");
             }
         }
     }
-    public void choice(Pokemon poke,int pos){
+    public void pokechoice(Pokemon poke,int pos){
         all:
         while(true){
             System.out.println("--------------------------");
@@ -276,8 +297,9 @@ public class Player {
             System.out.println("4. Back");
             System.out.println("Select one from 1-4: ");
             Scanner input = new Scanner(System.in);
-            int choice = input.nextInt();
-            input.nextLine();
+            String choice_st = input.nextLine();
+            if(isNum(choice_st)){
+            int choice = Integer.parseInt(choice_st);
             switch(choice){
                 case 1:
                     poke.showPokemonInfo();
@@ -289,31 +311,37 @@ public class Player {
                         System.out.println("3. " + poke.findmov3());
                         System.out.println("4. " + poke.findmov4());
                         System.out.println("Check moves(1-4)?5 to exit: ");
-                        int choicemove = input.nextInt();
-                        input.nextLine();
+                        String choicemove_st = input.nextLine();
+                        if(isNum(choicemove_st)){
+                        int choicemove = Integer.parseInt(choicemove_st);
                         switch(choicemove){
                             case 1:
                                 System.out.println("--------------------------");
-                                System.out.println(poke.findmov1());
-                                System.out.println(library.move_description.get(poke.findmov1()));
+                                Move x1 = new Move(poke.findmov1(),poke.findlvl());
+                                x1.showmovdetail();
                                 break;
                             case 2:
                                 System.out.println("--------------------------");
-                                System.out.println(poke.findmov2());
-                                System.out.println(library.move_description.get(poke.findmov2()));
+                                Move x2 = new Move(poke.findmov2(),poke.findlvl());
+                                x2.showmovdetail();
                                 break;
                             case 3:
                                 System.out.println("--------------------------");
-                                System.out.println(poke.findmov3());
-                                System.out.println(library.move_description.get(poke.findmov3()));
+                                Move x3 = new Move(poke.findmov3(),poke.findlvl());
+                                x3.showmovdetail();
                                 break;
                             case 4:
                                 System.out.println("--------------------------");
-                                System.out.println(poke.findmov4());
-                                System.out.println(library.move_description.get(poke.findmov4()));
+                                Move x4 = new Move(poke.findmov4(),poke.findlvl());
+                                x4.showmovdetail();
                                 break;
                             case 5:
                                 break moves;
+                            default:
+                                System.out.println("Invalid choice");
+                        }
+                        }else{
+                            System.out.println("Invalid input format");
                         }
                     }
                     break;
@@ -324,8 +352,9 @@ public class Player {
                     showitems();
                     System.out.println("12. Exit");
                     System.out.println("Select items(1-11)/12 to exit: ");
-                    int choiceitem = input.nextInt();
-                    input.nextLine();
+                    String choiceitem_st = input.nextLine();
+                    if(isNum(choiceitem_st)){
+                    int choiceitem = Integer.parseInt(choiceitem_st);
                     switch(choiceitem){
                         case 1: //this is supposed to be checking team while not in battle, hence all pokeballs used will output "No effect"
                             System.out.println("--------------------------");
@@ -391,7 +420,7 @@ public class Player {
                                 if(poke.findcurrenthp()==poke.findmaxhp()||poke.isFaint()){
                                     System.out.println("This item has no effect on this pokemon");
                                 }else{
-                                    poke.heal(library.pokemon_items.get("Max Potion").get("heal"));
+                                    poke.fullheal();
                                     int old = items.get("Max Potion");
                                     items.replace("Max Potion", old, old-1);
                                 }
@@ -427,15 +456,21 @@ public class Player {
                             }
                             break;
                         case 12:
-                            break itemmm; 
+                            break itemmm;
+                        default:
+                            System.out.println("Invalid choice");
+                    }
+                    }else{
+                        System.out.println("Invalid input format");
                     }
                     }
                     break;
                 case 3:
                     System.out.println("--------------------------");
                     System.out.println("Choose a slot to swap with(1-6)/7 to cancel: ");
-                    int choiceswap = input.nextInt();
-                    input.nextLine();
+                    String choiceswap_st = input.nextLine();
+                    if(isNum(choiceswap_st)){
+                    int choiceswap = Integer.parseInt(choiceswap_st);
                     switch(choiceswap){
                         case 1:
                             if(pokemon1!=null&&pos!=1){
@@ -601,11 +636,811 @@ public class Player {
                             }
                         case 7:
                             break;
+                        default:
+                            System.out.println("Invalid choice");
+                    }
+                    }else{
+                        System.out.println("Invalid input format");
                     }
                     break;
                 case 4:
                     break all;
+                default:
+                    System.out.println("Invalid choice");
             }
+            }else{
+                System.out.println("Invalid input format");
+            }
+        }
+    }
+    public void bag(){
+        Scanner input = new Scanner(System.in);
+        all:
+        while(true){
+            System.out.println("-------------------------");
+            System.out.println("-----------Bag-----------");
+            showitems();
+            System.out.println("-------End of Bag-------");
+            System.out.println("Choose an item(1-11)/12 to exit");
+            String choice_st = input.nextLine();
+            if(isNum(choice_st)){
+                int choice = Integer.parseInt(choice_st);
+                switch(choice){
+                    case 1:
+                        choiceitem("Poke Ball");
+                        break;
+                    case 2:
+                        choiceitem("Great Ball");
+                        break;
+                    case 3:
+                        choiceitem("Ultra Ball");
+                        break;
+                    case 4:
+                        choiceitem("Potion");
+                        break;    
+                    case 5:
+                        choiceitem("Super Potion");
+                        break;
+                    case 6:
+                        choiceitem("Hyper Potion");
+                        break;
+                    case 7:
+                        choiceitem("Max Potion");
+                        break;
+                    case 8:
+                        choiceitem("X Attack");
+                        break;
+                    case 9:
+                        choiceitem("X Defend");
+                        break;
+                    case 10:
+                        choiceitem("X Speed");
+                        break;
+                    case 11:
+                        choiceitem("Revive");
+                        break;
+                    case 12:
+                        break all;
+                    default:
+                        System.out.println("Invalid choice");
+                }
+            }else{
+                System.out.println("Invalid input format");
+            }
+        }
+    }
+    public void choiceitem(String it){
+        System.out.println("-------------------------");
+        Scanner input = new Scanner(System.in);
+        switch(it){
+            case "Poke Ball":
+                System.out.println("An item that can catch a wild pokemon, can be only used in battle, against wild pokemons");
+                System.out.println("You have: " + items.get("Poke Ball"));
+                break;
+            case "Great Ball":
+                System.out.println("An item that can catch a wild pokemon at a high rate, can be only used in battle, against wild pokemons");
+                System.out.println("You have: " + items.get("Great Ball"));
+                break;
+            case "Ultra Ball":
+                System.out.println("An item that can catch a wild pokemon at a very high rate, can be only used in battle, against wild pokemons");
+                System.out.println("You have: " + items.get("Ultra Ball"));
+                break;
+            case "Potion":
+                System.out.println("An item that can heal a pokemon for " + library.pokemon_items.get(it).get("heal") + " hp");
+                System.out.println("You have: " + items.get("Potion"));
+                if(items.get("Potion")!=0){
+                    while(true&&items.get("Potion")!=0){
+                        System.out.println("-------------------------");
+                        System.out.println("You have: " + items.get("Potion") + " Potions");
+                        System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
+                        showteam();
+                        String line = input.nextLine();
+                        if(line.charAt(0)=='y'&&line.length()==2){
+                            int poke = line.charAt(1)-'0';
+                            System.out.println("Selected pokemon on slot: " + poke);
+                            switch (poke) {
+                                case 1:
+                                    if(pokemon1!=null){
+                                        if(pokemon1.findcurrenthp()==pokemon1.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon1.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon1.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Potion");
+                                                items.replace("Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 2:
+                                    if(pokemon2!=null){
+                                        if(pokemon2.findcurrenthp()==pokemon2.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon2.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon2.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Potion");
+                                                items.replace("Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 3:
+                                    if(pokemon3!=null){
+                                        if(pokemon3.findcurrenthp()==pokemon3.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon3.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon3.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Potion");
+                                                items.replace("Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 4:
+                                    if(pokemon4!=null){
+                                        if(pokemon4.findcurrenthp()==pokemon4.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon4.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon4.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Potion");
+                                                items.replace("Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 5:
+                                    if(pokemon5!=null){
+                                        if(pokemon5.findcurrenthp()==pokemon5.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon5.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon5.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Potion");
+                                                items.replace("Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 6:
+                                    if(pokemon6!=null){
+                                        if(pokemon6.findcurrenthp()==pokemon6.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon6.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon6.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Potion");
+                                                items.replace("Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                default:
+                                    System.out.println("Invalid pokemon number");
+                                    break;
+                            }
+                        }else if(line.charAt(0)=='n'){
+                            break;
+                        }else{
+                            System.out.println("Invalid input");
+                        }
+                    }
+                    if(items.get("Potion")==0){
+                        System.out.println("-------------------------");
+                        System.out.println("You don't have any Potions left");
+                    }
+                }
+                break;
+            case "Super Potion":
+                System.out.println("An item that can heal a pokemon for " + library.pokemon_items.get(it).get("heal") + " hp");
+                System.out.println("You have: " + items.get("Super Potion"));
+                if(items.get("Super Potion")!=0){
+                    while(true&&items.get("Super Potion")!=0){
+                        System.out.println("-------------------------");
+                        System.out.println("You have: " + items.get("Super Potion") + " Super Potions");
+                        System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
+                        showteam();
+                        String line = input.nextLine();
+                        if(line.charAt(0)=='y'&&line.length()==2){
+                            int poke = line.charAt(1)-'0';
+                            System.out.println("Selected pokemon on slot: " + poke);
+                            switch (poke) {
+                                case 1:
+                                    if(pokemon1!=null){
+                                        if(pokemon1.findcurrenthp()==pokemon1.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon1.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon1.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Super Potion");
+                                                items.replace("Super Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 2:
+                                    if(pokemon2!=null){
+                                        if(pokemon2.findcurrenthp()==pokemon2.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon2.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon2.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Super Potion");
+                                                items.replace("Super Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 3:
+                                    if(pokemon3!=null){
+                                        if(pokemon3.findcurrenthp()==pokemon3.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon3.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon3.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Super Potion");
+                                                items.replace("Super Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 4:
+                                    if(pokemon4!=null){
+                                        if(pokemon4.findcurrenthp()==pokemon4.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon4.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon4.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Super Potion");
+                                                items.replace("Super Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 5:
+                                    if(pokemon5!=null){
+                                        if(pokemon5.findcurrenthp()==pokemon5.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon5.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon5.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Super Potion");
+                                                items.replace("Super Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 6:
+                                    if(pokemon6!=null){
+                                        if(pokemon6.findcurrenthp()==pokemon6.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon6.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon6.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Super Potion");
+                                                items.replace("Super Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                default:
+                                    System.out.println("Invalid pokemon number");
+                                    break;
+                            }
+                        }else if(line.charAt(0)=='n'){
+                            break;
+                        }else{
+                            System.out.println("Invalid input");
+                        }
+                    }
+                    if(items.get("Super Potion")==0){
+                        System.out.println("-------------------------");
+                        System.out.println("You don't have any Super Potions left");
+                    }
+                }
+                break;
+            case "Hyper Potion":
+                System.out.println("An item that can heal a pokemon for " + library.pokemon_items.get(it).get("heal") + " hp");
+                System.out.println("You have: " + items.get("Hyper Potion"));
+                if(items.get("Hyper Potion")!=0){
+                    while(true&&items.get("Hyper Potion")!=0){
+                        System.out.println("-------------------------");
+                        System.out.println("You have: " + items.get("Hyper Potion") + " Hyper Potions");
+                        System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
+                        showteam();
+                        String line = input.nextLine();
+                        if(line.charAt(0)=='y'&&line.length()==2){
+                            int poke = line.charAt(1)-'0';
+                            System.out.println("Selected pokemon on slot: " + poke);
+                            switch (poke) {
+                                case 1:
+                                    if(pokemon1!=null){
+                                        if(pokemon1.findcurrenthp()==pokemon1.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon1.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon1.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Hyper Potion");
+                                                items.replace("Hyper Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 2:
+                                    if(pokemon2!=null){
+                                        if(pokemon2.findcurrenthp()==pokemon2.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon2.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon2.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Hyper Potion");
+                                                items.replace("Hyper Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 3:
+                                    if(pokemon3!=null){
+                                        if(pokemon3.findcurrenthp()==pokemon3.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon3.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon3.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Hyper Potion");
+                                                items.replace("Hyper Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 4:
+                                    if(pokemon4!=null){
+                                        if(pokemon4.findcurrenthp()==pokemon4.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon4.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon4.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Hyper Potion");
+                                                items.replace("Hyper Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 5:
+                                    if(pokemon5!=null){
+                                        if(pokemon5.findcurrenthp()==pokemon5.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon5.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon5.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Hyper Potion");
+                                                items.replace("Hyper Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 6:
+                                    if(pokemon6!=null){
+                                        if(pokemon6.findcurrenthp()==pokemon6.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon6.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon6.heal(library.pokemon_items.get(it).get("heal"));
+                                                int old = items.get("Hyper Potion");
+                                                items.replace("Hyper Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                default:
+                                    System.out.println("Invalid pokemon number");
+                                    break;
+                            }
+                        }else if(line.charAt(0)=='n'){
+                            break;
+                        }else{
+                            System.out.println("Invalid input");
+                        }
+                    }
+                    if(items.get("Hyper Potion")==0){
+                        System.out.println("-------------------------");
+                        System.out.println("You don't have any Hyper Potions left");
+                    }
+                }
+                break;
+            case "Max Potion":
+                System.out.println("An item that can heal a pokemon until its full hp");
+                System.out.println("You have: " + items.get("Max Potion"));
+                if(items.get("Max Potion")!=0){
+                    while(true&&items.get("Max Potion")!=0){
+                        System.out.println("-------------------------");
+                        System.out.println("You have: " + items.get("Max Potion") + " Max Potions");
+                        System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
+                        showteam();
+                        String line = input.nextLine();
+                        if(line.charAt(0)=='y'&&line.length()==2){
+                            int poke = line.charAt(1)-'0';
+                            System.out.println("Selected pokemon on slot: " + poke);
+                            switch (poke) {
+                                case 1:
+                                    if(pokemon1!=null){
+                                        if(pokemon1.findcurrenthp()==pokemon1.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon1.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon1.fullheal();
+                                                int old = items.get("Max Potion");
+                                                items.replace("Max Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 2:
+                                    if(pokemon2!=null){
+                                        if(pokemon2.findcurrenthp()==pokemon2.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon2.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon2.fullheal();
+                                                int old = items.get("Max Potion");
+                                                items.replace("Max Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 3:
+                                    if(pokemon3!=null){
+                                        if(pokemon3.findcurrenthp()==pokemon3.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon3.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon3.fullheal();
+                                                int old = items.get("Max Potion");
+                                                items.replace("Max Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 4:
+                                    if(pokemon4!=null){
+                                        if(pokemon4.findcurrenthp()==pokemon4.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon4.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon4.fullheal();
+                                                int old = items.get("Max Potion");
+                                                items.replace("Max Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 5:
+                                    if(pokemon5!=null){
+                                        if(pokemon5.findcurrenthp()==pokemon5.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon5.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon5.fullheal();
+                                                int old = items.get("Max Potion");
+                                                items.replace("Max Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 6:
+                                    if(pokemon6!=null){
+                                        if(pokemon6.findcurrenthp()==pokemon6.findmaxhp()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon with full hp");
+                                        }else{
+                                            if(pokemon6.isFaint()){
+                                                System.out.println("This item has no effect on a fainted pokemon, please revive it first");
+                                            }else{
+                                                pokemon6.fullheal();
+                                                int old = items.get("Max Potion");
+                                                items.replace("Max Potion", old, old-1);
+                                            }
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                default:
+                                    System.out.println("Invalid pokemon number");
+                                    break;
+                            }
+                        }else if(line.charAt(0)=='n'){
+                            break;
+                        }else{
+                            System.out.println("Invalid input");
+                        }
+                    }
+                    if(items.get("Max Potion")==0){
+                        System.out.println("-------------------------");
+                        System.out.println("You don't have any Max Potions left");
+                    }
+                }
+                break;
+            case "X Attack":
+                System.out.println("An item that can increase a pokemon's attack by 1 stage in battle, can be only used in battle");
+                System.out.println("You have: " + items.get("X Attack"));
+                break;
+            case "X Defend":
+                System.out.println("An item that can increase a pokemon's defense by 1 stage in battle, can be only used in battle");
+                System.out.println("You have: " + items.get("X Defend"));
+                break;
+            case "X Speed":
+                System.out.println("An item that can increase a pokemon's speed by 1 stage in battle, can be only used in battle");
+                System.out.println("You have: " + items.get("X Speed"));
+                break;
+            case "Revive":
+                System.out.println("An item that can revive a fainted pokemon with half of its hp");
+                System.out.println("You have: " + items.get("Revive"));
+                if(items.get("Revive")!=0){
+                    while(true&&items.get("Revive")!=0){
+                        System.out.println("-------------------------");
+                        System.out.println("You have: " + items.get("Revive") + " Revives");
+                        System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
+                        showteam();
+                        String line = input.nextLine();
+                        if(line.charAt(0)=='y'&&line.length()==2){
+                            int poke = line.charAt(1)-'0';
+                            System.out.println("Selected pokemon on slot: " + poke);
+                            switch (poke) {
+                                case 1:
+                                    if(pokemon1!=null){
+                                        if(!pokemon1.isFaint()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon that is not fainted");
+                                        }else{
+                                            pokemon1.revive();
+                                            int old = items.get("Revive");
+                                            items.replace("Revive", old, old-1);
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 2:
+                                    if(pokemon2!=null){
+                                        if(!pokemon2.isFaint()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon that is not fainted");
+                                        }else{
+                                            pokemon2.revive();
+                                            int old = items.get("Revive");
+                                            items.replace("Revive", old, old-1);
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 3:
+                                    if(pokemon3!=null){
+                                        if(!pokemon3.isFaint()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon that is not fainted");
+                                        }else{
+                                            pokemon3.revive();
+                                            int old = items.get("Revive");
+                                            items.replace("Revive", old, old-1);
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 4:
+                                    if(pokemon4!=null){
+                                        if(!pokemon4.isFaint()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon that is not fainted");
+                                        }else{
+                                            pokemon4.revive();
+                                            int old = items.get("Revive");
+                                            items.replace("Revive", old, old-1);
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 5:
+                                    if(pokemon5!=null){
+                                        if(!pokemon5.isFaint()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon that is not fainted");
+                                        }else{
+                                            pokemon5.revive();
+                                            int old = items.get("Revive");
+                                            items.replace("Revive", old, old-1);
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                case 6:
+                                    if(pokemon6!=null){
+                                        if(!pokemon6.isFaint()){
+                                            System.out.println("-------------------------");
+                                            System.out.println("This item has no effect on a pokemon that is not fainted");
+                                        }else{
+                                            pokemon6.revive();
+                                            int old = items.get("Revive");
+                                            items.replace("Revive", old, old-1);
+                                        }
+                                    }else{
+                                        System.out.println("-------------------------");
+                                        System.out.println("This pokemon slot is empty");
+                                    }
+                                    break;
+                                default:
+                                    System.out.println("Invalid pokemon number");
+                                    break;
+                            }
+                        }else if(line.charAt(0)=='n'){
+                            break;
+                        }else{
+                            System.out.println("Invalid input");
+                        }
+                    }
+                    if(items.get("Revive")==0){
+                        System.out.println("-------------------------");
+                        System.out.println("You don't have any Revives left");
+                    }
+                }
+                break;
+        }
+    }
+    public boolean isNum(String s){
+        try{
+            int ss = Integer.parseInt(s);
+            return true;
+        }catch(NumberFormatException nfe){
+            return false;
         }
     }
     
