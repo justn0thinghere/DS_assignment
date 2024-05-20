@@ -16,7 +16,7 @@ public class Player {
     
     private String name;
     private String [] badges = new String[8];
-    int numofbadge;
+    private int numofbadge;
     private Pokemon pokemon1;
     private Pokemon pokemon2;
     private Pokemon pokemon3;
@@ -25,7 +25,6 @@ public class Player {
     private Pokemon pokemon6;
     private int money;
     private HashMap<String,Integer>items;
-    private boolean rivalracecheck;
     private int rivalracewins;
     private int battlewon;
     private ArrayList<Pokemon> PC;
@@ -78,6 +77,9 @@ public class Player {
     public int findMoney(){
         return money;
     }
+    public void deductMoney(int ded){
+        money-=ded;
+    }
     public void addMoney(int add){
         money+=add;
     }
@@ -103,6 +105,8 @@ public class Player {
         return currentCity;
     }
     public void movetoCity(String city){
+        System.out.printf("+%s+\n","-".repeat(90));
+        System.out.println("Moving to " + city + "......");
         currentCity = city;
     }
     public void obtainbadge(String badge){
@@ -128,23 +132,71 @@ public class Player {
             System.out.println("Congrats!! you have finished the game and won against all the gym leaders, you are now the new Champion of the Kanto Region!!");
         }
     }
+    public String[] getbadges(){
+        return badges;
+    }
     public void showbadges(){
         System.out.println("Badges: ");
         for(int i = 0;i<badges.length;i++){
             System.out.println(badges[i] + " ");
         }
     }
-    public void showinrivalrace(){
-        if(rivalracecheck){
-            System.out.println("In rival race");
-        }else{
-            System.out.println("Not in rival race");
+    
+    public void startrivalrace(){
+        RivalRace race = new RivalRace();
+        race.simulation();
+        
+        while(!currentCity.equals(race.getDestination())){
+            ArrayList<String> neighboringCities = library.kantoMap.getNeighbours(currentCity);
+            System.out.printf("+%s+\n","-".repeat(90));
+            System.out.println("You are now at: " + currentCity);
+            System.out.println("Move to the next correct location: ");
+            for (int i = 0; i < neighboringCities.size(); i++) {
+                System.out.println((i+1) + ". " + neighboringCities.get(i));
+            }
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Select a location: ");
+            String selection = sc.nextLine();
+            if(isNum(selection)){
+                int choice = Integer.parseInt(selection)-1;
+                if(choice<neighboringCities.size()){
+                    System.out.println("You selected " + neighboringCities.get(choice));
+                    String newCity = neighboringCities.get(choice);
+                    movetoCity(newCity);
+                    if(!currentCity.equals(race.getStack().pop())){
+                        System.out.printf("+%s+\n","-".repeat(90));
+                        System.out.println("Oops, you went the wrong way! You lost this race, better luck next time!");
+                        break;
+                    }
+                }else{
+                    System.out.printf("+%s+\n","-".repeat(90));
+                    System.out.println("Invalid input, choose again");
+                }
+            }else{
+                System.out.printf("+%s+\n","-".repeat(90));
+                System.out.println("Invalid input, choose again");
+            }
+        }
+        if(currentCity.equals(race.getDestination())){
+            System.out.printf("+%s+\n","-".repeat(90));
+            System.out.println("Congratulations, you have reach the finish line and won the race! You got $1000 for winning!");
+            addMoney(1000);
+            rivalracewins++;
         }
     }
+    
     public void obtainitems(String n,int i){
         int old = items.get(n);
         int neww = old + i;
         items.replace(n,old ,neww);
+    }
+    public void deditems(String n,int i){
+        int old = items.get(n);
+        int neww = old - i;
+        items.replace(n,old ,neww);
+    }
+    public HashMap<String,Integer>getItems(){
+        return items;
     }
     public void showitems(){
         System.out.println("1. Poke Ball: " + items.get("Poke Ball"));
@@ -177,46 +229,46 @@ public class Player {
         }
     }
     public void showteam(){
-        System.out.println("--------------------------");
+        System.out.printf("+%s+\n","-".repeat(90));
         System.out.println("---Pokemons---");
         if(pokemon1!=null)
             System.out.println("1. " + pokemon1.findname() + " Lvl: " + pokemon1.findlvl() + " HP: " + pokemon1.findcurrenthp() + " / " + pokemon1.findmaxhp());
         else
-            System.out.println("-----");
+            System.out.printf("+%s+\n","-".repeat(90));
         if(pokemon2!=null)
             System.out.println("2. " + pokemon2.findname() + " Lvl: " + pokemon2.findlvl() + " HP: " + pokemon2.findcurrenthp() + " / " + pokemon2.findmaxhp());
         else
-            System.out.println("-----");
+            System.out.printf("+%s+\n","-".repeat(90));
         if(pokemon3!=null)
             System.out.println("3. " + pokemon3.findname() + " Lvl: " + pokemon3.findlvl() + " HP: " + pokemon3.findcurrenthp() + " / " + pokemon3.findmaxhp());
         else
-            System.out.println("-----");
+            System.out.printf("+%s+\n","-".repeat(90));
         if(pokemon4!=null)
             System.out.println("4. " + pokemon4.findname() + " Lvl: " + pokemon4.findlvl() + " HP: " + pokemon4.findcurrenthp() + " / " + pokemon4.findmaxhp());
         else
-            System.out.println("-----");
+            System.out.printf("+%s+\n","-".repeat(90));
         if(pokemon5!=null)
             System.out.println("5. " + pokemon5.findname() + " Lvl: " + pokemon5.findlvl() + " HP: " + pokemon5.findcurrenthp() + " / " + pokemon5.findmaxhp());
         else
-            System.out.println("-----");
+            System.out.printf("+%s+\n","-".repeat(90));
         if(pokemon6!=null)
             System.out.println("6. " + pokemon6.findname() + " Lvl: " + pokemon6.findlvl() + " HP: " + pokemon6.findcurrenthp() + " / " + pokemon6.findmaxhp());
         else
-            System.out.println("-----");
+            System.out.printf("+%s+\n","-".repeat(90));
         System.out.println("---End of pokemon list---");
     }
     public String getName(){
         return name;
     }
     public void showprofile(){
-        System.out.println("--------------------------");
-        System.out.println("---Player Profile---");
+        System.out.printf("+%s+\n","-".repeat(90));
+        System.out.println("+-----------------Player Profile-----------------+");
         System.out.println("Player Name: "+ name);
         showbadges();
         showteam();
         System.out.println("Rival race wins: " + getrivalwins());
         System.out.println("Battles won: " + battlewon);
-        System.out.println("---End of Player Profile---");
+        System.out.println("+------------------End of Player Profile------------------+");
     }
     public void alterteam(){
         Scanner input = new Scanner(System.in);
@@ -230,7 +282,7 @@ public class Player {
             switch(choice){
                 case 1:
                     if(pokemon1==null){
-                        System.out.println("--------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("There is no pokemon in this slot");
                     }else{
                         pokechoice(pokemon1,1);
@@ -238,7 +290,7 @@ public class Player {
                     break;
                 case 2:
                     if(pokemon2==null){
-                        System.out.println("--------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("There is no pokemon in this slot");
                     }else{
                         pokechoice(pokemon2,2);
@@ -246,7 +298,7 @@ public class Player {
                     break;
                 case 3:
                     if(pokemon3==null){
-                        System.out.println("--------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("There is no pokemon in this slot");
                     }else{
                         pokechoice(pokemon3,3);
@@ -254,7 +306,7 @@ public class Player {
                     break;
                 case 4:
                     if(pokemon4==null){
-                        System.out.println("--------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("There is no pokemon in this slot");
                     }else{
                         pokechoice(pokemon4,4);
@@ -262,7 +314,7 @@ public class Player {
                     break;
                 case 5:
                     if(pokemon5==null){
-                        System.out.println("--------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("There is no pokemon in this slot");
                     }else{
                         pokechoice(pokemon5,5);
@@ -270,7 +322,7 @@ public class Player {
                     break;
                 case 6:
                     if(pokemon6==null){
-                        System.out.println("--------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("There is no pokemon in this slot");
                     }else{
                         pokechoice(pokemon6,6);
@@ -289,7 +341,7 @@ public class Player {
     public void pokechoice(Pokemon poke,int pos){
         all:
         while(true){
-            System.out.println("--------------------------");
+            System.out.printf("+%s+\n","-".repeat(90));
             System.out.println(poke.findname());
             System.out.println("1. Show details");
             System.out.println("2. Use items");
@@ -305,7 +357,7 @@ public class Player {
                     poke.showPokemonInfo();
                     moves:
                     while(true){
-                        System.out.println("--------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("1. " + poke.findmov1());
                         System.out.println("2. " + poke.findmov2());
                         System.out.println("3. " + poke.findmov3());
@@ -316,22 +368,22 @@ public class Player {
                         int choicemove = Integer.parseInt(choicemove_st);
                         switch(choicemove){
                             case 1:
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 Move x1 = new Move(poke.findmov1(),poke.findlvl());
                                 x1.showmovdetail();
                                 break;
                             case 2:
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 Move x2 = new Move(poke.findmov2(),poke.findlvl());
                                 x2.showmovdetail();
                                 break;
                             case 3:
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 Move x3 = new Move(poke.findmov3(),poke.findlvl());
                                 x3.showmovdetail();
                                 break;
                             case 4:
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 Move x4 = new Move(poke.findmov4(),poke.findlvl());
                                 x4.showmovdetail();
                                 break;
@@ -348,7 +400,7 @@ public class Player {
                 case 2:
                     itemmm:
                     while(true){
-                    System.out.println("--------------------------");
+                    System.out.printf("+%s+\n","-".repeat(90));
                     showitems();
                     System.out.println("12. Exit");
                     System.out.println("Select items(1-11)/12 to exit: ");
@@ -357,19 +409,19 @@ public class Player {
                     int choiceitem = Integer.parseInt(choiceitem_st);
                     switch(choiceitem){
                         case 1: //this is supposed to be checking team while not in battle, hence all pokeballs used will output "No effect"
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             System.out.println("This item has no effect on this pokemon");
                             break;
                         case 2:
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             System.out.println("This item has no effect on this pokemon");
                             break;
                         case 3:
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             System.out.println("This item has no effect on this pokemon");
                             break;
                         case 4:
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             if(items.get("Potion")!=0){
                                 if(poke.findcurrenthp()==poke.findmaxhp()||poke.isFaint()){
                                     System.out.println("This item has no effect on this pokemon");
@@ -384,7 +436,7 @@ public class Player {
                             }
                             break;
                         case 5:
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             if(items.get("Super Potion")!=0){
                                 if(poke.findcurrenthp()==poke.findmaxhp()||poke.isFaint()){
                                     System.out.println("This item has no effect on this pokemon");
@@ -400,7 +452,7 @@ public class Player {
                             
                             break;
                         case 6:
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             if(items.get("Hyper Potion")!=0){
                                 if(poke.findcurrenthp()==poke.findmaxhp()||poke.isFaint()){
                                     System.out.println("This item has no effect on this pokemon");
@@ -415,7 +467,7 @@ public class Player {
                             }
                             break;
                         case 7:
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             if(items.get("Max Potion")!=0){
                                 if(poke.findcurrenthp()==poke.findmaxhp()||poke.isFaint()){
                                     System.out.println("This item has no effect on this pokemon");
@@ -430,19 +482,19 @@ public class Player {
                             }
                             break;
                         case 8:
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             System.out.println("This item has no effect on this pokemon");
                             break;
                         case 9:
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             System.out.println("This item has no effect on this pokemon");
                             break;
                         case 10:
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             System.out.println("This item has no effect on this pokemon");
                             break;
                         case 11:
-                            System.out.println("--------------------------");
+                            System.out.printf("+%s+\n","-".repeat(90));
                             if(items.get("Revive")!=0){
                                 if(poke.isFaint()){
                                     poke.revive();
@@ -466,7 +518,7 @@ public class Player {
                     }
                     break;
                 case 3:
-                    System.out.println("--------------------------");
+                    System.out.printf("+%s+\n","-".repeat(90));
                     System.out.println("Choose a slot to swap with(1-6)/7 to cancel: ");
                     String choiceswap_st = input.nextLine();
                     if(isNum(choiceswap_st)){
@@ -487,15 +539,15 @@ public class Player {
                                 }else if(pos==6){
                                     pokemon6 = temp;
                                 }
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("Position swapped");
                                 break all;
                             }else if(pokemon1!=null&&pos==1){
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid beacuse this slot is its original slot");
                                 break;
                             }else{
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid because this slot does not have a pokemon");
                                 break;
                             }
@@ -514,15 +566,15 @@ public class Player {
                                 }else if(pos==6){
                                     pokemon6 = temp;
                                 }
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("Position swapped");
                                 break all;
                             }else if(pokemon2!=null&&pos==2){
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid beacuse this slot is its original slot");
                                 break;
                             }else{
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid because this slot does not have a pokemon");
                                 break;
                             }
@@ -541,15 +593,15 @@ public class Player {
                                 }else if(pos==6){
                                     pokemon6 = temp;
                                 }
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("Position swapped");
                                 break all;
                             }else if(pokemon3!=null&&pos==3){
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid beacuse this slot is its original slot");
                                 break;
                             }else{
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid because this slot does not have a pokemon");
                                 break;
                             }
@@ -568,15 +620,15 @@ public class Player {
                                 }else if(pos==6){
                                     pokemon6 = temp;
                                 }
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("Position swapped");
                                 break all;
                             }else if(pokemon4!=null&&pos==4){
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid beacuse this slot is its original slot");
                                 break;
                             }else{
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid because this slot does not have a pokemon");
                                 break;
                             }
@@ -595,15 +647,15 @@ public class Player {
                                 }else if(pos==6){
                                     pokemon6 = temp;
                                 }
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("Position swapped");
                                 break all;
                             }else if(pokemon5!=null&&pos==5){
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid beacuse this slot is its original slot");
                                 break;
                             }else{
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid because this slot does not have a pokemon");
                                 break;
                             }
@@ -622,15 +674,15 @@ public class Player {
                                 }else if(pos==5){
                                     pokemon5 = temp;
                                 }
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("Position swapped");
                                 break all;
                             }else if(pokemon6!=null&&pos==6){
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid beacuse this slot is its original slot");
                                 break;
                             }else{
-                                System.out.println("--------------------------");
+                                System.out.printf("+%s+\n","-".repeat(90));
                                 System.out.println("This swap is invalid because this slot does not have a pokemon");
                                 break;
                             }
@@ -657,10 +709,10 @@ public class Player {
         Scanner input = new Scanner(System.in);
         all:
         while(true){
-            System.out.println("-------------------------");
-            System.out.println("-----------Bag-----------");
+            System.out.printf("+%s+\n","-".repeat(90));
+            System.out.println("+--------------------Bag--------------------+");
             showitems();
-            System.out.println("-------End of Bag-------");
+            System.out.println("+----------------End of Bag-----------------+");
             System.out.println("Choose an item(1-11)/12 to exit");
             String choice_st = input.nextLine();
             if(isNum(choice_st)){
@@ -710,7 +762,7 @@ public class Player {
         }
     }
     public void choiceitem(String it){
-        System.out.println("-------------------------");
+        System.out.printf("+%s+\n","-".repeat(90));
         Scanner input = new Scanner(System.in);
         switch(it){
             case "Poke Ball":
@@ -730,7 +782,7 @@ public class Player {
                 System.out.println("You have: " + items.get("Potion"));
                 if(items.get("Potion")!=0){
                     while(true&&items.get("Potion")!=0){
-                        System.out.println("-------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("You have: " + items.get("Potion") + " Potions");
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
@@ -742,7 +794,7 @@ public class Player {
                                 case 1:
                                     if(pokemon1!=null){
                                         if(pokemon1.findcurrenthp()==pokemon1.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon1.isFaint()){
@@ -754,14 +806,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 2:
                                     if(pokemon2!=null){
                                         if(pokemon2.findcurrenthp()==pokemon2.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon2.isFaint()){
@@ -773,14 +825,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 3:
                                     if(pokemon3!=null){
                                         if(pokemon3.findcurrenthp()==pokemon3.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon3.isFaint()){
@@ -792,14 +844,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 4:
                                     if(pokemon4!=null){
                                         if(pokemon4.findcurrenthp()==pokemon4.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon4.isFaint()){
@@ -811,14 +863,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 5:
                                     if(pokemon5!=null){
                                         if(pokemon5.findcurrenthp()==pokemon5.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon5.isFaint()){
@@ -830,14 +882,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 6:
                                     if(pokemon6!=null){
                                         if(pokemon6.findcurrenthp()==pokemon6.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon6.isFaint()){
@@ -849,7 +901,7 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
@@ -864,7 +916,7 @@ public class Player {
                         }
                     }
                     if(items.get("Potion")==0){
-                        System.out.println("-------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("You don't have any Potions left");
                     }
                 }
@@ -874,7 +926,7 @@ public class Player {
                 System.out.println("You have: " + items.get("Super Potion"));
                 if(items.get("Super Potion")!=0){
                     while(true&&items.get("Super Potion")!=0){
-                        System.out.println("-------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("You have: " + items.get("Super Potion") + " Super Potions");
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
@@ -886,7 +938,7 @@ public class Player {
                                 case 1:
                                     if(pokemon1!=null){
                                         if(pokemon1.findcurrenthp()==pokemon1.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon1.isFaint()){
@@ -898,14 +950,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 2:
                                     if(pokemon2!=null){
                                         if(pokemon2.findcurrenthp()==pokemon2.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon2.isFaint()){
@@ -917,14 +969,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 3:
                                     if(pokemon3!=null){
                                         if(pokemon3.findcurrenthp()==pokemon3.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon3.isFaint()){
@@ -936,14 +988,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 4:
                                     if(pokemon4!=null){
                                         if(pokemon4.findcurrenthp()==pokemon4.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon4.isFaint()){
@@ -955,14 +1007,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 5:
                                     if(pokemon5!=null){
                                         if(pokemon5.findcurrenthp()==pokemon5.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon5.isFaint()){
@@ -974,14 +1026,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 6:
                                     if(pokemon6!=null){
                                         if(pokemon6.findcurrenthp()==pokemon6.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon6.isFaint()){
@@ -993,7 +1045,7 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
@@ -1008,7 +1060,7 @@ public class Player {
                         }
                     }
                     if(items.get("Super Potion")==0){
-                        System.out.println("-------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("You don't have any Super Potions left");
                     }
                 }
@@ -1018,7 +1070,7 @@ public class Player {
                 System.out.println("You have: " + items.get("Hyper Potion"));
                 if(items.get("Hyper Potion")!=0){
                     while(true&&items.get("Hyper Potion")!=0){
-                        System.out.println("-------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("You have: " + items.get("Hyper Potion") + " Hyper Potions");
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
@@ -1030,7 +1082,7 @@ public class Player {
                                 case 1:
                                     if(pokemon1!=null){
                                         if(pokemon1.findcurrenthp()==pokemon1.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon1.isFaint()){
@@ -1042,14 +1094,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 2:
                                     if(pokemon2!=null){
                                         if(pokemon2.findcurrenthp()==pokemon2.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon2.isFaint()){
@@ -1061,14 +1113,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 3:
                                     if(pokemon3!=null){
                                         if(pokemon3.findcurrenthp()==pokemon3.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon3.isFaint()){
@@ -1080,14 +1132,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 4:
                                     if(pokemon4!=null){
                                         if(pokemon4.findcurrenthp()==pokemon4.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon4.isFaint()){
@@ -1099,14 +1151,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 5:
                                     if(pokemon5!=null){
                                         if(pokemon5.findcurrenthp()==pokemon5.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon5.isFaint()){
@@ -1118,14 +1170,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 6:
                                     if(pokemon6!=null){
                                         if(pokemon6.findcurrenthp()==pokemon6.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon6.isFaint()){
@@ -1137,7 +1189,7 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
@@ -1152,7 +1204,7 @@ public class Player {
                         }
                     }
                     if(items.get("Hyper Potion")==0){
-                        System.out.println("-------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("You don't have any Hyper Potions left");
                     }
                 }
@@ -1162,7 +1214,7 @@ public class Player {
                 System.out.println("You have: " + items.get("Max Potion"));
                 if(items.get("Max Potion")!=0){
                     while(true&&items.get("Max Potion")!=0){
-                        System.out.println("-------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("You have: " + items.get("Max Potion") + " Max Potions");
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
@@ -1174,7 +1226,7 @@ public class Player {
                                 case 1:
                                     if(pokemon1!=null){
                                         if(pokemon1.findcurrenthp()==pokemon1.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon1.isFaint()){
@@ -1186,14 +1238,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 2:
                                     if(pokemon2!=null){
                                         if(pokemon2.findcurrenthp()==pokemon2.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon2.isFaint()){
@@ -1205,14 +1257,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 3:
                                     if(pokemon3!=null){
                                         if(pokemon3.findcurrenthp()==pokemon3.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon3.isFaint()){
@@ -1224,14 +1276,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 4:
                                     if(pokemon4!=null){
                                         if(pokemon4.findcurrenthp()==pokemon4.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon4.isFaint()){
@@ -1243,14 +1295,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 5:
                                     if(pokemon5!=null){
                                         if(pokemon5.findcurrenthp()==pokemon5.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon5.isFaint()){
@@ -1262,14 +1314,14 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 6:
                                     if(pokemon6!=null){
                                         if(pokemon6.findcurrenthp()==pokemon6.findmaxhp()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon with full hp");
                                         }else{
                                             if(pokemon6.isFaint()){
@@ -1281,7 +1333,7 @@ public class Player {
                                             }
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
@@ -1296,7 +1348,7 @@ public class Player {
                         }
                     }
                     if(items.get("Max Potion")==0){
-                        System.out.println("-------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("You don't have any Max Potions left");
                     }
                 }
@@ -1318,7 +1370,7 @@ public class Player {
                 System.out.println("You have: " + items.get("Revive"));
                 if(items.get("Revive")!=0){
                     while(true&&items.get("Revive")!=0){
-                        System.out.println("-------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("You have: " + items.get("Revive") + " Revives");
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
@@ -1330,7 +1382,7 @@ public class Player {
                                 case 1:
                                     if(pokemon1!=null){
                                         if(!pokemon1.isFaint()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
                                             pokemon1.revive();
@@ -1338,14 +1390,14 @@ public class Player {
                                             items.replace("Revive", old, old-1);
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 2:
                                     if(pokemon2!=null){
                                         if(!pokemon2.isFaint()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
                                             pokemon2.revive();
@@ -1353,14 +1405,14 @@ public class Player {
                                             items.replace("Revive", old, old-1);
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 3:
                                     if(pokemon3!=null){
                                         if(!pokemon3.isFaint()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
                                             pokemon3.revive();
@@ -1368,14 +1420,14 @@ public class Player {
                                             items.replace("Revive", old, old-1);
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 4:
                                     if(pokemon4!=null){
                                         if(!pokemon4.isFaint()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
                                             pokemon4.revive();
@@ -1383,14 +1435,14 @@ public class Player {
                                             items.replace("Revive", old, old-1);
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 5:
                                     if(pokemon5!=null){
                                         if(!pokemon5.isFaint()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
                                             pokemon5.revive();
@@ -1398,14 +1450,14 @@ public class Player {
                                             items.replace("Revive", old, old-1);
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
                                 case 6:
                                     if(pokemon6!=null){
                                         if(!pokemon6.isFaint()){
-                                            System.out.println("-------------------------");
+                                            System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
                                             pokemon6.revive();
@@ -1413,7 +1465,7 @@ public class Player {
                                             items.replace("Revive", old, old-1);
                                         }
                                     }else{
-                                        System.out.println("-------------------------");
+                                        System.out.printf("+%s+\n","-".repeat(90));
                                         System.out.println("This pokemon slot is empty");
                                     }
                                     break;
@@ -1428,7 +1480,7 @@ public class Player {
                         }
                     }
                     if(items.get("Revive")==0){
-                        System.out.println("-------------------------");
+                        System.out.printf("+%s+\n","-".repeat(90));
                         System.out.println("You don't have any Revives left");
                     }
                 }
@@ -1443,5 +1495,13 @@ public class Player {
             return false;
         }
     }
-    
+    public void allhealup(){
+        System.out.println("All your pokemons have been healed to their best status");
+        pokemon1.fullres();
+        pokemon2.fullres();
+        pokemon3.fullres();
+        pokemon4.fullres();
+        pokemon5.fullres();
+        pokemon6.fullres();
+    }
 }

@@ -168,18 +168,19 @@ public class Map<T extends Comparable<T>,N extends Comparable<N>> {
         }
         return null;
     }
-    public ArrayList<T> getNeighbours(T v){
-        if(!hasCity(v))
+    public ArrayList<T> getNeighbours(T v) {
+        if (!hasCity(v))
             return null;
-        ArrayList<T>list = new ArrayList<>();
-        City<T,N>temp = head;
-        while(temp!=null){
-            if(temp.cityInfo.compareTo(v) == 0){
-                Edge<T,N>currentEdge = temp.firstEdge;
-                while(currentEdge!=null){
+        ArrayList<T> list = new ArrayList<>();
+        City<T, N> temp = head;
+        while (temp != null) {
+            if (temp.cityInfo.compareTo(v) == 0) {
+                Edge<T, N> currentEdge = temp.firstEdge;
+                while (currentEdge != null) {
                     list.add(currentEdge.toCity.cityInfo);
                     currentEdge = currentEdge.nextEdge;
                 }
+                return list;
             }
             temp = temp.nextCity;
         }

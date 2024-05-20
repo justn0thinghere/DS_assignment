@@ -146,7 +146,7 @@ public class Pokemon {
         return currentxp;
     }
     public void showPokemonInfo(){
-        System.out.println("-----Pokemon Info-----");
+        System.out.println("+--------------------Pokemon Info--------------------+");
         System.out.println(findname());
         System.out.println("Lvl: " + findlvl());
         System.out.printf("HP: %d/%d\n",findcurrenthp(),findmaxhp());
@@ -168,14 +168,14 @@ public class Pokemon {
         maxhp = library.pokemonhp.get(name).get(level);
         currenthp = maxhp-hploss;
         speed = library.pokemon_speed.get(name).get(level);
-        if(level>=lvl_to_evolve&&!inbattle){
+        System.out.printf("+%s+\n","-".repeat(90));
+        System.out.println(name + " leveled up!");
+        if(level>=lvl_to_evolve){
             evolve();
         }
-        System.out.println("--------------------------");
-        System.out.println(name + " leveled up!");
     }
     public void evolve(){
-        System.out.println("--------------------------");
+        System.out.printf("+%s+\n","-".repeat(90));
         System.out.printf("What?! %s is evolving!\n",name);
         name = nextevolution;
         int hploss = maxhp-currenthp;
@@ -212,14 +212,14 @@ public class Pokemon {
         return faint;
     }
     public void takedmg(int d){
-        System.out.println("--------------------------");
+        System.out.printf("+%s+\n","-".repeat(90));
         System.out.println(name + " took " + d + " damage");
         if(d<currenthp){
             currenthp = currenthp-d;
         }else{
             currenthp = 0;
             faint = true;
-            System.out.println("--------------------------");
+            System.out.printf("+%s+\n","-".repeat(90));
             System.out.println(name + " has fainted");
         }
     }
@@ -234,7 +234,7 @@ public class Pokemon {
         }
     }
     public void heal(int h){
-        System.out.println("--------------------------");
+        System.out.printf("+%s+\n","-".repeat(90));
         System.out.println(name + " is healed for " + h + " hp");
         
         if((currenthp + h)>=maxhp){
@@ -246,7 +246,7 @@ public class Pokemon {
     }
     
     public void fullheal(){
-        System.out.println("--------------------------");
+        System.out.printf("+%s+\n","-".repeat(90));
         currenthp = maxhp;
         System.out.println(name + " is healed to full hp");
     }
@@ -256,7 +256,7 @@ public class Pokemon {
         currenthp = maxhp;
     }
     public void revive(){
-        System.out.println("--------------------------");
+        System.out.printf("+%s+\n","-".repeat(90));
         System.out.println(name + " is revived");
         
         faint = false;

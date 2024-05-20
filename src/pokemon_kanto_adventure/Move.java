@@ -94,7 +94,7 @@ public class Move {
         return description;
     }
     public void showmovdetail(){
-        System.out.println("----Move Details----");
+        System.out.println("+-------------------Move Details-------------------+");
         System.out.println(movename);
         System.out.println("Category: " + category);
         System.out.println("Move order: " + order);
