@@ -38,13 +38,12 @@ public class Pokemon_kanto_adventure {
         a.addPokemon(new Pokemon("Snorlax",100));
         a.addPokemon(new Pokemon("Ponyta",5));
         a.addPokemon(new Pokemon("Pikachu",5));
-        a.addPokemon(new Pokemon("Squirtle",5));
-        a.findPoke1().takedmg(100);
-        a.findPoke2().takedmg(200);
-        a.findPoke3().takedmg(3000);
-        a.findPoke4().takedmg(1000);
-        a.findPoke5().takedmg(1200);
-        a.findPoke6().takedmg(2000);
+        a.addPokemon(new Pokemon("Victreebel",50));
+        a.findPoke1().takedmg(9999);
+        a.findPoke2().takedmg(9999);
+        a.findPoke3().takedmg(9999);
+        a.findPoke4().takedmg(9999);
+        a.findPoke5().takedmg(9999);
         System.out.println("");
         System.out.println("");
         title();
@@ -165,7 +164,7 @@ public class Pokemon_kanto_adventure {
                 String wild_pokemon = wilds[wild_choice];
                 System.out.println("A wild " + wild_pokemon + " appeared!");
                 Pokemon wild = new Pokemon(wild_pokemon,wild_lvl);
-                // Implement wild Pokémon battle logic
+                Battle wildbattle = new Battle(player,wild);
             }else if (choice.charAt(0)=='4'&&choice.length()==2) {
                 char player_choice = choice.charAt(1);
                 switch(player_choice){
@@ -1710,164 +1709,8 @@ public class Pokemon_kanto_adventure {
                 }
     }
     public static void SafariZone(Player player){
-        Scanner sc = new Scanner(System.in);
-        System.out.printf("+%s+\n","-".repeat(90));
-        System.out.println("Welcome to the Safari Zone! Today's challenge: Sort the Pokemon!");
-        System.out.printf("+%s+\n","-".repeat(90));
-        while (true) {
-            System.out.print("Enter the Pokemon in your party (separated by a comma): ");
-            String input = sc.nextLine();
-            String[] pokemonArray = input.split(", ");
-            ArrayList<String> list = new ArrayList<>(Arrays.asList(pokemonArray));
-            while (true) {
-                if (CheckInput(list)) {
-                    break;
-                } else {
-                    System.out.println("Enter correct input (Example: Pikachu, Eevee, Snorlax)");
-                    input = sc.nextLine();
-                    pokemonArray = input.split(", ");
-                    list = new ArrayList<>(Arrays.asList(pokemonArray));
-                }
-            }
-            
-            System.out.println("");
-            System.out.println("You entered: " + displayList(list));
-            System.out.println("");
-            System.out.println("Sorting your Pokemon according to their unique preferences...");
-            System.out.println("");
-            int step = 1;
-            if (list.contains("Eevee")) {
-                if(list.lastIndexOf("Eevee")!=list.indexOf("Eevee")){//more than one eevee. Which means one of the eevees cannot become the first one, hence list is unsortable
-                    System.out.println("This set of pokemons is unsortable");
-                    return;
-                }
-                System.out.println("Step " + step + " : Eevee insists on being positioned either at the beginning of the lineup to showcase its adaptability.");
-                String temp = list.get(0);
-                int indexEevee = list.indexOf("Eevee");
-                list.set(0, "Eevee");
-                list.set(indexEevee, temp);
-                System.out.println("Partial sort: " + displayList(list));
-                System.out.println("");
-                step++;
-            }
-            if (list.contains("Pikachu")) {
-                System.out.println("Step " + step + " : Pikachu demands to be placed at the center of the arrangement.");
-                String temp = list.get(list.size() / 2);
-                int indexPikachu = list.indexOf("Pikachu");
-                list.set(list.size() / 2, "Pikachu");
-                list.set(indexPikachu, temp);
-                System.out.println("Partial sort: " + displayList(list));
-                System.out.println("");
-                step++;
-            }
-            if (list.contains("Snorlax")) {
-                System.out.println("Step " + step + " : Snorlax insists on being positioned at the end of the lineup to ensure maximum relaxation.");
-                String temp = list.get(list.size() - 1);
-                int indexSnorlax = list.indexOf("Snorlax");
-                list.set(list.size() - 1, "Snorlax");
-                list.set(indexSnorlax, temp);
-                System.out.println("Partial sort: " + displayList(list));
-                System.out.println("");
-                step++;
-            }
-            if (list.contains("Jigglypuff")) {
-                for (int i = 0; i < list.size() - 1; i++) {
-                    if (library.pokemon_cute.get(list.get(i)) && !(list.get(i).equals("Jigglypuff"))) {
-                        System.out.println("Step " + step + " : Jigglypuff prefers to be surrounded by other \"cute\" Pokemon for morale purposes.");
-                        String temp = list.get(i + 1);
-                        if (!(list.get(i + 1).equals("Eevee") || list.get(i + 1).equals("Pikachu") || list.get(i + 1).equals("Snorlax"))) {
-                            int indexJigglypuff = list.indexOf("Jigglypuff");
-                            list.set(i + 1, "Jigglypuff");
-                            list.set(indexJigglypuff, temp);
-                        }
-                        System.out.println("Partial sort: " + displayList(list));
-                        System.out.println("");
-                        step++;
-                        break;
-                    }
-                }
-
-            }
-
-            if (list.contains("Bulbasaur") && list.contains("Charmander")) {
-                System.out.println("Step " + step + " : Bulbasaur refuses to be placed next to Charmander.");
-                int indexB = list.indexOf("Bulbasaur");
-                int indexC = list.indexOf("Charmander");
-                if (Math.abs(indexB - indexC) == 1) {
-                    for (int i = 0; i < list.size(); i++) {
-                        if (!(list.get(i).equals("Eevee") || list.get(i).equals("Pikachu") || list.get(i).equals("Snorlax") || i == indexB || i == indexC)) {
-                            if (indexB > indexC) {
-                                list.set(indexB, list.get(i));
-                                list.set(i, "Bulbasaur");
-                            } else {
-                                list.set(indexC, list.get(i));
-                                list.set(i, "Charmander");
-                            }
-                            break;
-                        }
-                    }
-                }
-                System.out.println("Partial sort: " + displayList(list));
-                System.out.println("");
-                step++;
-            }
-            if (list.contains("Machop")) {
-                System.out.println("Step " + step + " : Machop demands to be placed next to the heaviest Pokemon in the lineup to show off its strength.");
-                double maxWeight = 0;
-                String maxName = "";
-                for (int i = 0; i < list.size(); i++) {
-                    if (library.pokemon_weight.get(list.get(i)) > maxWeight && !(list.get(i).equals("Machop"))) {
-                        maxWeight = library.pokemon_weight.get(list.get(i));
-                        maxName = list.get(i);
-                    }
-                }
-                int indexMax = list.indexOf(maxName);
-                if (indexMax - 1 >= 0) {
-                    String temp = list.get(indexMax - 1);
-                    if (!(temp.equals("Eevee") || temp.equals("Pikachu") || temp.equals("Snorlax"))) {
-                        int indexMachop = list.indexOf("Machop");
-                        list.set(indexMax - 1, "Machop");
-                        list.set(indexMachop, temp);
-                    }
-                }
-                else if (indexMax + 1 < list.size()) {
-                    String temp = list.get(indexMax + 1);
-                    if (!(temp.equals("Eevee") || temp.equals("Pikachu") || temp.equals("Snorlax"))) {
-                        int indexMachop = list.indexOf("Machop");
-                        list.set(indexMax + 1, "Machop");
-                        list.set(indexMachop, temp);
-                    }
-                }else{
-                    System.out.println("These pokemons are impossible to sort to fulfill all pokemon's requirements.");
-                    return;
-                }
-                System.out.println("Partial sort: " + displayList(list));
-                System.out.println("");
-                step++;
-            }
-
-            System.out.printf("+%s+\n","-".repeat(90));
-            System.out.println("Final Sorted List: " + displayList(list));
-            System.out.printf("+%s+\n","-".repeat(90));
-            System.out.println("Your Pokemon are now sorted! Enjoy your adventure in the Safari Zone!");
-            System.out.printf("+%s+\n","-".repeat(90));
-            break;
-        }
+        
     }
-    public static boolean CheckInput(ArrayList<String> list) {
-        boolean tf = false;
-        int count = 0;
-        for (int i = 0; i < list.size(); i++) {
-            if(library.pokemonhp.containsKey(list.get(i))){
-                count++;
-            }
-        }
-        if (count == list.size()) {
-            tf = true;
-        }
-        return tf;
-    }
-
     public static String displayList(ArrayList<String> list) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.size() - 1; i++) {
@@ -1876,7 +1719,6 @@ public class Pokemon_kanto_adventure {
         sb.append(list.get(list.size() - 1));
         return sb.toString();
     }
-
     public static void displayMap(Player player) {
         switch(player.findCurrentCity()){
             case "Pallet Town":

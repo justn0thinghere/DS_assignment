@@ -99,6 +99,7 @@ public class Move {
         System.out.println("Category: " + category);
         System.out.println("Move order: " + order);
         if(category.equals("dmg")){
+            System.out.println("Move type: " + type);
             System.out.println("Move Power: " + power);
         }else if(category.equals("heal")){
             System.out.println("This move will heal your pokemon for 50% of its max hp");
@@ -123,6 +124,7 @@ public class Move {
             }
         }else if(category.equals("sp")){
             if(power!=0){
+                System.out.println("Move type: " + type);
                 System.out.println("Move Power: " + power);
             }
             if(atk!=0.0){

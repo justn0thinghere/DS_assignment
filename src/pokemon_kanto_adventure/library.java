@@ -32,6 +32,8 @@ public class library {
     protected static HashMap<String, HashMap<String, String>> pokemon_type = new HashMap<>();
     protected static HashMap<String,Double> pokemon_weight = new HashMap<>();
     protected static HashMap<String,String> move_description = new HashMap<>();
+    protected static HashMap<String,ArrayList<Pokemon>>Trainers = new HashMap<>();
+    protected static HashMap<String,Integer>TrainerReward = new HashMap<>();
     
     public static void readallfiles(){
         readpokemonhp();
@@ -51,6 +53,7 @@ public class library {
         readpokemonweight();
         readmovedescription();
         initializeMap();
+        readAllTrainers();
     }
     public static void readpokemonhp(){
         try{
@@ -375,5 +378,31 @@ public class library {
         kantoMap.addPath("Celadon City","Fuschia City", 10);
         kantoMap.addPath("Fuschia City","Cinnabar Island", 5);
     }
-    
+    public static void readAllTrainers(){
+        try{
+            BufferedReader br = new BufferedReader(new FileReader("trainers.csv"));
+            br.readLine();
+            String line = "";
+            while((line = br.readLine())!=null){
+                String[]values = line.split(",");
+                String trainer_name = values[0];
+                ArrayList<Pokemon>pokemons = new ArrayList<>();
+                for(int i = 1;i<values.length-1;i++){
+                    if(!values[i].equals("null")){
+                        String[]poke_desc = values[i].split("\\|");
+                        String pokemon_Name = poke_desc[0];
+                        int pokemon_Level = Integer.parseInt(poke_desc[1]);
+                        boolean wild = false;
+                        Pokemon pokepoke = new Pokemon(pokemon_Name,pokemon_Level,wild);
+                        pokemons.add(pokepoke);
+                    }
+                }
+                int money = Integer.parseInt(values[values.length-1]);
+                Trainers.put(trainer_name, pokemons);
+                TrainerReward.put(trainer_name, money);
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
 }

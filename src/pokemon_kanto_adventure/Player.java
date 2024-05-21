@@ -211,6 +211,24 @@ public class Player {
         System.out.println("10. X Speed: " + items.get("X Speed"));
         System.out.println("11. Revive: " + items.get("Revive"));
     }
+    public void setPoke1(Pokemon poke){
+        pokemon1 = poke;
+    }
+    public void setPoke2(Pokemon poke){
+        pokemon2 = poke;
+    }
+    public void setPoke3(Pokemon poke){
+        pokemon3 = poke;
+    }
+    public void setPoke4(Pokemon poke){
+        pokemon4 = poke;
+    }
+    public void setPoke5(Pokemon poke){
+        pokemon5 = poke;
+    }
+    public void setPoke6(Pokemon poke){
+        pokemon6 = poke;
+    }
     public int getrivalwins(){
         return rivalracewins;
     }
@@ -269,6 +287,53 @@ public class Player {
         System.out.println("Rival race wins: " + getrivalwins());
         System.out.println("Battles won: " + battlewon);
         System.out.println("+------------------End of Player Profile------------------+");
+    }
+    public boolean teamfaint(){
+        if(pokemon1!=null){ // check if pokemon1 is nothing, if is nothing then player does not have pokemon, return false, else player has at least one pokemon
+            if(pokemon1.isFaint()){ //check if the first pokemon is fainted
+                if(pokemon2!=null){ //if first pokemon is fainted, check if player have second pokemon, if no, means player only have one pokemon and it is fainted, hence all pokemons are fainted and return true
+                    if(pokemon2.isFaint()){ //check if the 2nd pokemon is fainted
+                        if(pokemon3!=null){ //if 2nd pokemon is fainted, check if player have 3rd pokemon, if no, means player only have 2 pokemons, hence all pokemons are fainted and return true
+                            if(pokemon3.isFaint()){ //check if 3rd pokemon is fainted
+                                if(pokemon4!=null){ //if 3rd pokemon is fainted, check if player have 4th pokemon, if no, means player only have 3 pokemons, hence all pokemons are fainted and return true
+                                    if(pokemon4.isFaint()){ //check if 4th pokemon is fainted
+                                        if(pokemon5!=null){ //if 4th pokemon is fainted, check if player have 5th pokemon, if no, means player only have 4 pokemons, hence all pokemons are fainted and return true
+                                            if(pokemon5.isFaint()){ //check if 5th pokemon is fainted
+                                                if(pokemon6!=null){ //if 5th pokemon is fainted, check if player have 6th pokemon, if no, means player only have 5 pokemons, hence all pokemons are fainted and return true
+                                                    if(pokemon6.isFaint()){ //check if 6th pokemon is fainted
+                                                        if(currentCity.equals("Pallet Town")){
+                                                            System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                                            allhealup();
+                                                            System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                                                        }else{
+                                                            System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $200");
+                                                            allhealup();
+                                                            System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                                                        }
+                                                        return true; //if true, then all pokemons in the team is fainted and return true;
+                                                    }
+                                                }else{
+                                                    return true;
+                                                }
+                                            }
+                                        }else{
+                                            return true;
+                                        }
+                                    }
+                                }else{
+                                    return true;
+                                }
+                            }
+                        }else{
+                            return true;
+                        }
+                    }
+                }else{
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     public void alterteam(){
         Scanner input = new Scanner(System.in);
@@ -426,6 +491,7 @@ public class Player {
                                 if(poke.findcurrenthp()==poke.findmaxhp()||poke.isFaint()){
                                     System.out.println("This item has no effect on this pokemon");
                                 }else{
+                                    System.out.println("You used a Potion on " + poke.findname());
                                     poke.heal(library.pokemon_items.get("Potion").get("heal"));
                                     int old = items.get("Potion");
                                     items.replace("Potion", old, old-1);
@@ -441,6 +507,7 @@ public class Player {
                                 if(poke.findcurrenthp()==poke.findmaxhp()||poke.isFaint()){
                                     System.out.println("This item has no effect on this pokemon");
                                 }else{
+                                    System.out.println("You used a Super Potion on " + poke.findname());
                                     poke.heal(library.pokemon_items.get("Super Potion").get("heal"));
                                     int old = items.get("Super Potion");
                                     items.replace("Super Potion", old, old-1);
@@ -457,6 +524,7 @@ public class Player {
                                 if(poke.findcurrenthp()==poke.findmaxhp()||poke.isFaint()){
                                     System.out.println("This item has no effect on this pokemon");
                                 }else{
+                                    System.out.println("You used a Hyper Potion on " + poke.findname());
                                     poke.heal(library.pokemon_items.get("Hyper Potion").get("heal"));
                                     int old = items.get("Hyper Potion");
                                     items.replace("Hyper Potion", old, old-1);
@@ -472,6 +540,7 @@ public class Player {
                                 if(poke.findcurrenthp()==poke.findmaxhp()||poke.isFaint()){
                                     System.out.println("This item has no effect on this pokemon");
                                 }else{
+                                    System.out.println("You used a Max Potion on " + poke.findname());
                                     poke.fullheal();
                                     int old = items.get("Max Potion");
                                     items.replace("Max Potion", old, old-1);
@@ -497,6 +566,7 @@ public class Player {
                             System.out.printf("+%s+\n","-".repeat(90));
                             if(items.get("Revive")!=0){
                                 if(poke.isFaint()){
+                                    System.out.println("You used a Revive on " + poke.findname());
                                     poke.revive();
                                     int old = items.get("Revive");
                                     items.replace("Revive", old, old-1);
@@ -800,6 +870,7 @@ public class Player {
                                             if(pokemon1.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Potion on " + pokemon1.findname());
                                                 pokemon1.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Potion");
                                                 items.replace("Potion", old, old-1);
@@ -819,6 +890,7 @@ public class Player {
                                             if(pokemon2.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Potion on " + pokemon2.findname());
                                                 pokemon2.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Potion");
                                                 items.replace("Potion", old, old-1);
@@ -838,6 +910,7 @@ public class Player {
                                             if(pokemon3.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Potion on " + pokemon3.findname());
                                                 pokemon3.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Potion");
                                                 items.replace("Potion", old, old-1);
@@ -857,6 +930,7 @@ public class Player {
                                             if(pokemon4.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Potion on " + pokemon4.findname());
                                                 pokemon4.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Potion");
                                                 items.replace("Potion", old, old-1);
@@ -876,6 +950,7 @@ public class Player {
                                             if(pokemon5.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Potion on " + pokemon5.findname());
                                                 pokemon5.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Potion");
                                                 items.replace("Potion", old, old-1);
@@ -895,6 +970,7 @@ public class Player {
                                             if(pokemon6.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Potion on " + pokemon6.findname());
                                                 pokemon6.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Potion");
                                                 items.replace("Potion", old, old-1);
@@ -944,6 +1020,7 @@ public class Player {
                                             if(pokemon1.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Super Potion on " + pokemon1.findname());
                                                 pokemon1.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Super Potion");
                                                 items.replace("Super Potion", old, old-1);
@@ -963,6 +1040,7 @@ public class Player {
                                             if(pokemon2.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Super Potion on " + pokemon2.findname());
                                                 pokemon2.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Super Potion");
                                                 items.replace("Super Potion", old, old-1);
@@ -982,6 +1060,7 @@ public class Player {
                                             if(pokemon3.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Super Potion on " + pokemon3.findname());
                                                 pokemon3.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Super Potion");
                                                 items.replace("Super Potion", old, old-1);
@@ -1001,6 +1080,7 @@ public class Player {
                                             if(pokemon4.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Super Potion on " + pokemon4.findname());
                                                 pokemon4.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Super Potion");
                                                 items.replace("Super Potion", old, old-1);
@@ -1020,6 +1100,7 @@ public class Player {
                                             if(pokemon5.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Super Potion on " + pokemon5.findname());
                                                 pokemon5.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Super Potion");
                                                 items.replace("Super Potion", old, old-1);
@@ -1039,6 +1120,7 @@ public class Player {
                                             if(pokemon6.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Super Potion on " + pokemon6.findname());
                                                 pokemon6.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Super Potion");
                                                 items.replace("Super Potion", old, old-1);
@@ -1088,6 +1170,7 @@ public class Player {
                                             if(pokemon1.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Hyper Potion on " + pokemon1.findname());
                                                 pokemon1.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Hyper Potion");
                                                 items.replace("Hyper Potion", old, old-1);
@@ -1107,6 +1190,7 @@ public class Player {
                                             if(pokemon2.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Hyper Potion on " + pokemon2.findname());
                                                 pokemon2.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Hyper Potion");
                                                 items.replace("Hyper Potion", old, old-1);
@@ -1126,6 +1210,7 @@ public class Player {
                                             if(pokemon3.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Hyper Potion on " + pokemon3.findname());
                                                 pokemon3.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Hyper Potion");
                                                 items.replace("Hyper Potion", old, old-1);
@@ -1145,6 +1230,7 @@ public class Player {
                                             if(pokemon4.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Hyper Potion on " + pokemon4.findname());
                                                 pokemon4.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Hyper Potion");
                                                 items.replace("Hyper Potion", old, old-1);
@@ -1164,6 +1250,7 @@ public class Player {
                                             if(pokemon5.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Hyper Potion on " + pokemon5.findname());
                                                 pokemon5.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Hyper Potion");
                                                 items.replace("Hyper Potion", old, old-1);
@@ -1183,6 +1270,7 @@ public class Player {
                                             if(pokemon6.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Hyper Potion on " + pokemon6.findname());
                                                 pokemon6.heal(library.pokemon_items.get(it).get("heal"));
                                                 int old = items.get("Hyper Potion");
                                                 items.replace("Hyper Potion", old, old-1);
@@ -1232,6 +1320,7 @@ public class Player {
                                             if(pokemon1.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Max Potion on " + pokemon1.findname());
                                                 pokemon1.fullheal();
                                                 int old = items.get("Max Potion");
                                                 items.replace("Max Potion", old, old-1);
@@ -1251,6 +1340,7 @@ public class Player {
                                             if(pokemon2.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Max Potion on " + pokemon2.findname());
                                                 pokemon2.fullheal();
                                                 int old = items.get("Max Potion");
                                                 items.replace("Max Potion", old, old-1);
@@ -1270,6 +1360,7 @@ public class Player {
                                             if(pokemon3.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Max Potion on " + pokemon3.findname());
                                                 pokemon3.fullheal();
                                                 int old = items.get("Max Potion");
                                                 items.replace("Max Potion", old, old-1);
@@ -1289,6 +1380,7 @@ public class Player {
                                             if(pokemon4.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Max Potion on " + pokemon4.findname());
                                                 pokemon4.fullheal();
                                                 int old = items.get("Max Potion");
                                                 items.replace("Max Potion", old, old-1);
@@ -1308,6 +1400,7 @@ public class Player {
                                             if(pokemon5.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Max Potion on " + pokemon5.findname());
                                                 pokemon5.fullheal();
                                                 int old = items.get("Max Potion");
                                                 items.replace("Max Potion", old, old-1);
@@ -1327,6 +1420,7 @@ public class Player {
                                             if(pokemon6.isFaint()){
                                                 System.out.println("This item has no effect on a fainted pokemon, please revive it first");
                                             }else{
+                                                System.out.println("You used a Max Potion on " + pokemon6.findname());
                                                 pokemon6.fullheal();
                                                 int old = items.get("Max Potion");
                                                 items.replace("Max Potion", old, old-1);
@@ -1385,6 +1479,7 @@ public class Player {
                                             System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
+                                            System.out.println("You used a Revive on " + pokemon1.findname());
                                             pokemon1.revive();
                                             int old = items.get("Revive");
                                             items.replace("Revive", old, old-1);
@@ -1400,6 +1495,7 @@ public class Player {
                                             System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
+                                            System.out.println("You used a Revive on " + pokemon2.findname());
                                             pokemon2.revive();
                                             int old = items.get("Revive");
                                             items.replace("Revive", old, old-1);
@@ -1415,6 +1511,7 @@ public class Player {
                                             System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
+                                            System.out.println("You used a Revive on " + pokemon3.findname());
                                             pokemon3.revive();
                                             int old = items.get("Revive");
                                             items.replace("Revive", old, old-1);
@@ -1430,6 +1527,7 @@ public class Player {
                                             System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
+                                            System.out.println("You used a Revive on " + pokemon4.findname());
                                             pokemon4.revive();
                                             int old = items.get("Revive");
                                             items.replace("Revive", old, old-1);
@@ -1445,6 +1543,7 @@ public class Player {
                                             System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
+                                            System.out.println("You used a Revive on " + pokemon5.findname());
                                             pokemon5.revive();
                                             int old = items.get("Revive");
                                             items.replace("Revive", old, old-1);
@@ -1460,6 +1559,7 @@ public class Player {
                                             System.out.printf("+%s+\n","-".repeat(90));
                                             System.out.println("This item has no effect on a pokemon that is not fainted");
                                         }else{
+                                            System.out.println("You used a Revive on " + pokemon6.findname());
                                             pokemon6.revive();
                                             int old = items.get("Revive");
                                             items.replace("Revive", old, old-1);

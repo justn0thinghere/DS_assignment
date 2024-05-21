@@ -13,6 +13,7 @@ import java.util.HashMap;
  */
 public class Pokemon {
     private String name;
+    private int max_level = 100;
     private int level;
     private int currenthp;
     private int maxhp;
@@ -31,6 +32,7 @@ public class Pokemon {
     private boolean wild;
     private boolean inbattle;
     private int lvl_to_evolve;
+    private HashMap<String, Double>effectiveness;
     public Pokemon(String n){ //to decalre a level 1 pokemon
         name = n;
         level=1;
@@ -51,6 +53,7 @@ public class Pokemon {
         wild = true;
         inbattle = false;
         faint = false;
+        effectiveness = library.pokemon_effectiveness.get(name);
     }
     public Pokemon(String n,int l,boolean w){ //to declare a pokemon with level and name and set whether it is wild or not
         name = n;
@@ -72,6 +75,7 @@ public class Pokemon {
         wild = w;
         inbattle = true;
         faint = false;
+        effectiveness = library.pokemon_effectiveness.get(name);
     }
     public Pokemon(String n,int l){ //to declare a pokemon with level and name
         name = n;
@@ -93,6 +97,7 @@ public class Pokemon {
         faint = false;
         wild = true;
         inbattle = false;
+        effectiveness = library.pokemon_effectiveness.get(name);
     }
     public int findmaxhp(){
         return maxhp;
@@ -105,8 +110,10 @@ public class Pokemon {
             return 100;
         }else if(level<=30){
             return 200;
-        }else{
+        }else if(level<max_level){
             return 300;
+        }else{
+            return Integer.MAX_VALUE;
         }
     }
     public boolean findcute(){
@@ -145,6 +152,12 @@ public class Pokemon {
     public int findcurrentxp(){
         return currentxp;
     }
+    public HashMap<String,Double> findEffectiveness(){
+        return effectiveness;
+    }
+    public double findEffectiveness(String t){
+        return effectiveness.get(t);
+    }
     public void showPokemonInfo(){
         System.out.println("+--------------------Pokemon Info--------------------+");
         System.out.println(findname());
@@ -160,18 +173,55 @@ public class Pokemon {
         System.out.println(findmov2());
         System.out.println(findmov3());
         System.out.println(findmov4());
-        
+        System.out.println("Weak against: ");
+        String[]types = {"normal","fire","water","electric","grass","fighting","poison","ground","flying","psychic","bug","rock","ghost","dark","steel","sound"};
+        for(int i = 0;i<types.length;i++){
+            if(effectiveness.get(types[i])>1.0){
+                System.out.println(" - " + types[i]);
+            }
+        }
+        System.out.println("Resists: ");
+        for(int i = 0;i<types.length;i++){
+            if(effectiveness.get(types[i])<1.0){
+                System.out.println(" - " + types[i]);
+            }
+        }
+    }
+    public void showWeakness(){
+        System.out.println(name + " is weak against: ");
+        String[]types = {"normal","fire","water","electric","grass","fighting","poison","ground","flying","psychic","bug","rock","ghost","dark","steel","sound"};
+        for(int i = 0;i<types.length;i++){
+            if(effectiveness.get(types[i])>1.0){
+                System.out.println(" - " + types[i]);
+            }
+        }
+        System.out.println("moves");
+        System.out.println("");
+    }
+    public void showResistance(){
+        System.out.println(name + " resists: ");
+        String[]types = {"normal","fire","water","electric","grass","fighting","poison","ground","flying","psychic","bug","rock","ghost","dark","steel","sound"};
+        for(int i = 0;i<types.length;i++){
+            if(effectiveness.get(types[i])<1.0){
+                System.out.println(" - " + types[i]);
+            }
+        }
+        System.out.println("moves");
+        System.out.println("");
     }
     public void levelup(){
-        level++;
-        int hploss = maxhp-currenthp;
-        maxhp = library.pokemonhp.get(name).get(level);
-        currenthp = maxhp-hploss;
-        speed = library.pokemon_speed.get(name).get(level);
-        System.out.printf("+%s+\n","-".repeat(90));
-        System.out.println(name + " leveled up!");
-        if(level>=lvl_to_evolve){
-            evolve();
+        if(level!=max_level){
+            level++;
+            int hploss = maxhp-currenthp;
+            maxhp = library.pokemonhp.get(name).get(level);
+            currenthp = maxhp-hploss;
+            speed = library.pokemon_speed.get(name).get(level);
+            currentxp = calcxp();
+            System.out.printf("+%s+\n","-".repeat(90));
+            System.out.println(name + " leveled up!");
+            if(level>=lvl_to_evolve){
+                evolve();
+            }
         }
     }
     public void evolve(){
@@ -224,13 +274,17 @@ public class Pokemon {
         }
     }
     public void obtainxp(int e){
-        if(e<currentxp){
-            currentxp = currentxp - e;
+        if(level!=max_level){
+            if(e<currentxp){
+                currentxp = currentxp - e;
+            }else{
+                e = e-currentxp;
+                currentxp = 0;
+                levelup();
+                obtainxp(e);
+            }
         }else{
-            e = e-currentxp;
-            currentxp = 0;
-            levelup();
-            obtainxp(e);
+            System.out.println("This pokemon is at max level and will not obatin any more xp");
         }
     }
     public void heal(int h){
