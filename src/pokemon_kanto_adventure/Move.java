@@ -41,7 +41,11 @@ public class Move {
         }else if(category.equals("heal")){
             hphealratio = 0.5;
         }else if(category.equals("sp")){
+            
             power = library.move_dmg.get(movename).get(lvl);
+            if(power!=0){
+                type = library.move_type.get(movename);
+            }
             atk = library.move_stat.get(movename).get("atk");
             def = library.move_stat.get(movename).get("def");
             sp = library.move_stat.get(movename).get("sp");

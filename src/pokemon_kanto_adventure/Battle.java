@@ -38,6 +38,9 @@ public class Battle {
         }
         System.out.println("You sent out " + your_pokemon.findname());
         foe_pokemon = wild;
+        System.out.println(your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ] [ " + your_pokemon.findcurrenthp() + "/" + your_pokemon.findmaxhp() + " ] ");
+        System.out.println("VS");
+        System.out.println(foe_pokemon.findname() + "[ level " + foe_pokemon.findlvl() + " ] [ " + foe_pokemon.findcurrenthp() + "/" + foe_pokemon.findmaxhp() + " ] ");
         resetstat();
         System.out.println("");
         System.out.println("Tips: ");
@@ -47,6 +50,8 @@ public class Battle {
         Scanner input = new Scanner(System.in);
         all:
         while(!player.teamfaint()||foe_pokemon.isFaint()){
+            boolean foe_faint = false;
+            boolean your_faint = false;
             boolean move = false;
             Move your_move = null;
             boolean alter_pokemons = false;
@@ -59,11 +64,15 @@ public class Battle {
             //-bag
             //-run -- break
                 System.out.printf("+%s+\n","-".repeat(90));
+                System.out.println(your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ] [ " + your_pokemon.findcurrenthp() + "/" + your_pokemon.findmaxhp() + " ] ");
+                System.out.println("VS");
+                System.out.println(foe_pokemon.findname() + "[ level " + foe_pokemon.findlvl() + " ] [ " + foe_pokemon.findcurrenthp() + "/" + foe_pokemon.findmaxhp() + " ] ");
                 System.out.println("1. Fight");
                 System.out.println("2. Pokemons");
                 System.out.println("3. Bag");
-                System.out.println("4. Run");
-                System.out.println("Your move(Choose 1-4)");
+                System.out.println("4. Check status");
+                System.out.println("5. Run");
+                System.out.println("Your move(Choose 1-5)");
                 String choice_st = input.nextLine();
                 if(isNum(choice_st)){
                     int choice = Integer.parseInt(choice_st);
@@ -87,6 +96,14 @@ public class Battle {
                                 break decision;
                             }
                         case 4:
+                            System.out.println("Your atk: " + atk);
+                            System.out.println("Your def: " + def);
+                            System.out.println("Your sp: " + sp);
+                            System.out.println("Foe atk: " + foe_atk);
+                            System.out.println("Foe def: " + foe_def);
+                            System.out.println("Foe sp: " + foe_sp);
+                            break;
+                        case 5:
                             System.out.println("You ran away safely!");
                             break all;
                         default:
@@ -122,8 +139,6 @@ public class Battle {
             
             //if swap and use items then your pokemon cannot move
             if(alter_pokemons||bag_items){
-                double def_ratio = 1;
-                double foe_atk_ratio = 1;
                 
             }else if(move){
             //calculate move order
@@ -135,15 +150,15 @@ public class Battle {
                 double sp_rate = 1;
                 double foe_sp_rate = 1;
                 if(sp>0){
-                    sp_rate = (1.0*(2+sp))/2;
+                    sp_rate = (1.0*(2+sp))/(2*1.0);
                 }else if(sp<0){
-                    sp_rate = 2/(1.0*(2+sp));
+                    sp_rate = (1.0*2)/(2+(-1*sp));
                 }
             
                 if(foe_sp>0){
-                    foe_sp_rate = (1.0*(2+foe_sp))/2;
+                    foe_sp_rate = (1.0*(2+foe_sp))/(2*1.0);
                 }else if(foe_sp<0){
-                    foe_sp_rate = 2/(1.0*(2+foe_sp));
+                    foe_sp_rate = (1.0*2)/(2+(-1*foe_sp));
                 }
                 your_speed = your_speed*sp_rate;
                 foe_speed = foe_speed*foe_sp_rate;
@@ -151,19 +166,55 @@ public class Battle {
                 //determine who moves first
                 if(your_move_order>foe_move_order){
                     //you move first
+                    yourmove(your_move);
+                    if(foe_pokemon.isFaint()){
+                        foe_faint = true;
+                    }else{
+                        opponentmove(foe_move);
+                    }
                 }else if(foe_move_order>your_move_order){
                     //foe move first
+                    opponentmove(foe_move);
+                    if(your_pokemon.isFaint()){
+                        your_faint = true;
+                    }else{
+                        yourmove(your_move);
+                    }
                 }else{ //same move order
                     if(your_speed>foe_speed){
                         //you move first
+                        yourmove(your_move);
+                        if(foe_pokemon.isFaint()){
+                            foe_faint = true;
+                        }else{
+                            opponentmove(foe_move);
+                        }
                     }else if(foe_speed>your_speed){
                         //foe move first
+                        opponentmove(foe_move);
+                        if(your_pokemon.isFaint()){
+                            your_faint = true;
+                        }else{
+                            yourmove(your_move);
+                        }
                     }else{ //same speed
-                        int rando = r.nextInt(2);
+                        int rando = r.nextInt(2); //coin flip to determine who move first 50 50
                         if(rando == 0){
                             //you move first
+                            yourmove(your_move);
+                            if(foe_pokemon.isFaint()){
+                                foe_faint = true;
+                            }else{
+                                opponentmove(foe_move);
+                            }
                         }else{
                             //foe move first
+                            opponentmove(foe_move);
+                            if(your_pokemon.isFaint()){
+                                your_faint = true;
+                            }else{
+                                yourmove(your_move);
+                            }
                         }
                     }
                 }
@@ -178,11 +229,154 @@ public class Battle {
             //if wild faint 
                 //obtainxp()
                 //break
-            
+                if(foe_faint||foe_pokemon.isFaint()){
+                    your_pokemon.obtainxp(foe_pokemon.findlvl()*5);
+                    break all;
+                }
             //if your pokemon faint
             //-check allfaint?
             //-next pokemon
             //-run -- break
+                if(your_faint||your_pokemon.isFaint()){
+                    if(player.teamfaint()){
+                        break all;
+                    }else{
+                        System.out.println("Do you want to switch pokemon(y) or run away(any other input)?");
+                        String choice_sr = input.nextLine(); //choice to switch or run
+                        if(choice_sr.equals("y")){
+                            switchpoke:
+                            while(true){
+                                player.showteam();
+                                System.out.println("Choose a pokemon(1-6)/7 to run: ");
+                                String choice_st = input.nextLine();
+                                if(isNum(choice_st)){
+                                    int choice = Integer.parseInt(choice_st);
+                                    switch(choice){
+                                        case 1:
+                                            if(player.findPoke1().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke1().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke1();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            break;
+                                        case 2:
+                                            if(player.findPoke2()!=null){
+                                            if(player.findPoke2().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke2().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke2();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            }else{
+                                                System.out.println("This pokemon slot is empty");
+                                            }
+                                            break;
+                                        case 3:
+                                            if(player.findPoke3()!=null){
+                                            if(player.findPoke3().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke3().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke3();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            }else{
+                                                System.out.println("This pokemon slot is empty");
+                                            }
+                                            break;
+                                        case 4:
+                                            if(player.findPoke4()!=null){
+                                            if(player.findPoke4().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke4().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke4();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            }else{
+                                                System.out.println("This pokemon slot is empty");
+                                            }
+                                            break;
+                                        case 5:
+                                            if(player.findPoke5()!=null){
+                                            if(player.findPoke5().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke5().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke5();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            }else{
+                                                System.out.println("This pokemon slot is empty");
+                                            }
+                                            break;
+                                        case 6:
+                                            if(player.findPoke6()!=null){
+                                            if(player.findPoke6().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke6().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke6();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            }else{
+                                                System.out.println("This pokemon slot is empty");
+                                            }
+                                            break;
+                                        case 7:
+                                            break all;
+                                        default:
+                                            System.out.println("Invalid choice, choose again!");
+                                    }
+                                }else{
+                                    System.out.println("Invalid choice, choose again!");
+                                }
+                            }
+                        }else{
+                            System.out.println("You ran away safely!");
+                            break all;
+                        }
+                    }
+                }
             }
         }
     }
@@ -965,7 +1159,7 @@ public class Battle {
                             return false;
                         }
                         System.out.println("You used a X Attack!");
-                        System.out.println(your_pokemon.findname() + "'s attack rose by 1 stage");
+                        System.out.println("Your " + your_pokemon.findname() + "'s attack rose by 1 stage");
                         atk++;
                         player.deditems("X Attack", 1);
                         return true;
@@ -987,7 +1181,7 @@ public class Battle {
                             return false;
                         }
                         System.out.println("You used a X Defend!");
-                        System.out.println(your_pokemon.findname() + "'s defense rose by 1 stage");
+                        System.out.println("Your " + your_pokemon.findname() + "'s defense rose by 1 stage");
                         def++;
                         player.deditems("X Defend", 1);
                         return true;
@@ -1009,7 +1203,7 @@ public class Battle {
                             return false;
                         }
                         System.out.println("You used a X Speed!");
-                        System.out.println(your_pokemon.findname() + "'s speed rose by 1 stage");
+                        System.out.println("Your " + your_pokemon.findname() + "'s speed rose by 1 stage");
                         sp++;
                         player.deditems("X Speed", 1);
                         return true;
@@ -1417,5 +1611,514 @@ public class Battle {
         }
         }
         return false;
+    }
+    
+    public void opponentmove(Move foe_move){
+        System.out.printf("+%s+\n","-".repeat(90));
+        System.out.println("Opponent " + foe_pokemon.findname() + " used " + foe_move.getName() + " !");
+        double def_ratio = 1;
+        double foe_atk_ratio = 1;
+        if(def<0){
+            def_ratio = (1.0*2)/(2+(-1*def));
+        }else if(def>0){
+            def_ratio = (1.0*2+def)/(2*1.0);
+        }
+        if(foe_atk<0){
+            foe_atk_ratio = (1.0*2)/(2+(-1*foe_atk));
+        }else if(foe_atk>0){
+            foe_atk_ratio = (1.0*2+foe_atk)/(2*1.0);
+        }   
+        if(foe_move.getCategory().equals("dmg")){
+            int base_power = foe_move.getPower();
+            String foe_move_type = foe_move.getType();
+            double same_type = 1;
+            if(foe_pokemon.findtype1().equals(foe_move.getType())||foe_pokemon.findtype2().equals(foe_move.getType())){
+                same_type = 1.5;
+            }
+            double effectiveness = your_pokemon.findEffectiveness(foe_move_type);
+            int damage = (int)(base_power*same_type*effectiveness*foe_atk_ratio/def_ratio);
+            
+            if(effectiveness>1.0){
+                System.out.println("It's super effective!");
+            }else if(effectiveness<1.0&&effectiveness>0){
+                System.out.println("It's not very effective...");
+            }else if(effectiveness==0.0){
+                System.out.println("This move does not have any effect on your " + your_pokemon.findname());
+            }
+            your_pokemon.takedmg(damage);
+        }else if(foe_move.getCategory().equals("stat")){
+            if(foe_move.getFAtk()<0){ //print output to show change in stats
+                if(atk>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack fell by " + -1*foe_move.getFAtk() + " stages");
+                    atk+=foe_move.getFAtk(); //you are the foe of your foe, so FAtk is your atk change,same with FDef and Fsp
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack cannot be lowered anymore!");
+                }
+            }else if(foe_move.getFAtk()>0){
+                if(atk<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack rose by " + foe_move.getFAtk() + " stages");
+                    atk+=foe_move.getFAtk();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack cannot be raised anymore!");
+                }
+            }
+            if(foe_move.getFDef()<0){
+                if(def>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense fell by " + -1*foe_move.getFDef() + " stages");
+                    def+=foe_move.getFDef(); //you are the foe of your foe, so FAtk is your atk change,same with FDef and Fsp
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense cannot be lowered anymore!");
+                }
+            }else if(foe_move.getFDef()>0){
+                if(def<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense rose by " + foe_move.getFDef() + " stages");
+                    def+=foe_move.getFDef();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense cannot be raised anymore!");
+                }
+            }
+            if(foe_move.getFSp()<0){
+                if(sp>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed fell by " + -1*foe_move.getFSp() + " stages");
+                    sp+=foe_move.getFSp(); //you are the foe of your foe, so FAtk is your atk change,same with FDef and Fsp
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed cannot be lowered anymore!");
+                }
+            }else if(foe_move.getFSp()>0){
+                if(sp<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed rose by " + foe_move.getFSp() + " stages");
+                    sp+=foe_move.getFSp();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed cannot be raised anymore!");
+                }
+            }
+                    
+            if(foe_move.getAtk()<0){ //print output to show change in stats
+                if(foe_atk>-6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack fell by " + -1*foe_move.getAtk() + " stages");
+                    foe_atk+=foe_move.getAtk();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack cannot be lowered anymore!");
+                }
+            }else if(foe_move.getAtk()>0){
+                if(foe_atk<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack rose by " + foe_move.getAtk() + " stages");
+                    foe_atk+=foe_move.getAtk();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack cannot be raised anymore!");
+                }
+            }
+            if(foe_move.getDef()<0){
+                if(foe_def>-6){ 
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense fell by " + -1*foe_move.getDef() + " stages");
+                    foe_def+=foe_move.getDef();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense cannot be lowered anymore!");
+                }
+            }else if(foe_move.getDef()>0){
+                if(foe_def<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense rose by " + foe_move.getDef() + " stages");
+                    foe_def+=foe_move.getDef();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense cannot be raised anymore!");
+                }
+            }
+            if(foe_move.getSp()<0){
+                if(foe_sp>-6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed fell by " + -1*foe_move.getSp() + " stages");
+                    foe_sp+=foe_move.getSp();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed cannot be lowered anymore!");
+                }
+            }else if(foe_move.getSp()>0){
+                if(foe_sp<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed rose by " + foe_move.getSp() + " stages");
+                    foe_sp+=foe_move.getSp();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed cannot be raised anymore!");
+                }
+            }
+        }else if(foe_move.getCategory().equals("heal")){
+            int healing = (int)(foe_pokemon.findmaxhp()*foe_move.gethpheal());
+            foe_pokemon.heal(healing);
+        }else if(foe_move.getCategory().equals("sp")){
+            int damage = 0;
+            int yourcurrenthp = your_pokemon.findcurrenthp();
+            if(foe_move.getPower()!=0){
+                int base_power = foe_move.getPower();
+                String foe_move_type = foe_move.getType();
+                double effectiveness = your_pokemon.findEffectiveness(foe_move_type);
+                double same_type = 1;
+                if(foe_pokemon.findtype1().equals(foe_move.getType())||foe_pokemon.findtype2().equals(foe_move.getType())){
+                    same_type = 1.5;
+                }
+                damage = (int)(base_power*same_type*effectiveness*foe_atk_ratio/def_ratio);
+                if(effectiveness>1.0){
+                    System.out.println("It's super effective!");
+                }else if(effectiveness<1.0&&effectiveness>0){
+                    System.out.println("It's not very effective...");
+                }else if(effectiveness==0.0){
+                    System.out.println("This move does not have any effect on " + your_pokemon.findname());
+                }
+                your_pokemon.takedmg(damage);
+            }
+            
+                    
+            if(foe_move.getFAtk()<0){ //print output to show change in stats
+                if(atk>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack fell by " + -1*foe_move.getFAtk() + " stages");
+                    atk+=foe_move.getFAtk(); //you are the foe of your foe, so FAtk is your atk change,same with FDef and Fsp
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack cannot be lowered anymore!");
+                }
+            }else if(foe_move.getFAtk()>0){
+                if(atk<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack rose by " + foe_move.getFAtk() + " stages");
+                    atk+=foe_move.getFAtk();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack cannot be raised anymore!");
+                }
+            }
+            if(foe_move.getFDef()<0){
+                if(def>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense fell by " + -1*foe_move.getFDef() + " stages");
+                    def+=foe_move.getFDef(); //you are the foe of your foe, so FAtk is your atk change,same with FDef and Fsp
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense cannot be lowered anymore!");
+                }
+            }else if(foe_move.getFDef()>0){
+                if(def<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense rose by " + foe_move.getFDef() + " stages");
+                    def+=foe_move.getFDef();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense cannot be raised anymore!");
+                }
+            }
+            if(foe_move.getFSp()<0){
+                if(sp>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed fell by " + -1*foe_move.getFSp() + " stages");
+                    sp+=foe_move.getFSp(); //you are the foe of your foe, so FAtk is your atk change,same with FDef and Fsp
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed cannot be lowered anymore!");
+                }
+            }else if(foe_move.getFSp()>0){
+                if(sp<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed rose by " + foe_move.getFSp() + " stages");
+                    sp+=foe_move.getFSp();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed cannot be raised anymore!");
+                }
+            }
+                    
+            if(foe_move.getAtk()<0){ //print output to show change in stats
+                if(foe_atk>-6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack fell by " + -1*foe_move.getAtk() + " stages");
+                    foe_atk+=foe_move.getAtk();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack cannot be lowered anymore!");
+                }
+            }else if(foe_move.getAtk()>0){
+                if(foe_atk<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack rose by " + foe_move.getAtk() + " stages");
+                    foe_atk+=foe_move.getAtk();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack cannot be raised anymore!");
+                }
+            }
+            if(foe_move.getDef()<0){
+                if(foe_def>-6){ 
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense fell by " + -1*foe_move.getDef() + " stages");
+                    foe_def+=foe_move.getDef();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense cannot be lowered anymore!");
+                }
+            }else if(foe_move.getDef()>0){
+                if(foe_def<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense rose by " + foe_move.getDef() + " stages");
+                    foe_def+=foe_move.getDef();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense cannot be raised anymore!");
+                }
+            }
+            if(foe_move.getSp()<0){
+                if(foe_sp>-6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed fell by " + -1*foe_move.getSp() + " stages");
+                    foe_sp+=foe_move.getSp();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed cannot be lowered anymore!");
+                }
+            }else if(foe_move.getSp()>0){
+                if(foe_sp<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed rose by " + foe_move.getSp() + " stages");
+                    foe_sp+=foe_move.getSp();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed cannot be raised anymore!");
+                }
+            }
+            
+            if(foe_move.getdmgheal()!=0.0){
+                if(damage>yourcurrenthp){
+                    int healing = (int)(yourcurrenthp*foe_move.getdmgheal());
+                    foe_pokemon.heal(healing);
+                }else{
+                    int healing = (int)(damage*foe_move.getdmgheal());
+                    foe_pokemon.heal(healing);
+                }
+            }
+        }
+    }
+    
+    public void yourmove(Move your_move){
+        System.out.printf("+%s+\n","-".repeat(90));
+        System.out.println("Your " + your_pokemon.findname() + " used " + your_move.getName() + " !");
+        double atk_ratio = 1;
+        double foe_def_ratio = 1;
+        if(atk<0){
+            atk_ratio = (1.0*2)/(2+(-1*atk));
+        }else if(atk>0){
+            atk_ratio = (1.0*(2+atk))/(1.0*2);
+        }
+        if(foe_def<0){
+            foe_def_ratio = (2*1.0)/(2+(-1*foe_def));
+        }else if(foe_def>0){
+            foe_def_ratio = (1.0*(2+foe_def))/(2*1.0);
+        }
+                
+        if(your_move.getCategory().equals("dmg")){
+            int base_power = your_move.getPower();
+            String your_move_type = your_move.getType();
+            double effectiveness = foe_pokemon.findEffectiveness(your_move_type);
+            double same_type = 1;
+            if(your_pokemon.findtype1().equals(your_move.getType())||your_pokemon.findtype2().equals(your_move.getType())){
+                same_type = 1.5;
+            }
+            int damage = (int)(base_power*same_type*effectiveness*atk_ratio/foe_def_ratio);
+            
+            if(effectiveness>1.0){
+                System.out.println("It's super effective!");
+            }else if(effectiveness<1.0&&effectiveness>0){
+                System.out.println("It's not very effective...");
+            }else if(effectiveness==0.0){
+                System.out.println("This move does not have any effect on " + foe_pokemon.findname());
+            }
+            foe_pokemon.takedmg(damage);
+        }else if(your_move.getCategory().equals("stat")){
+            if(your_move.getAtk()<0){ //print output to show change in stats
+                if(atk>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack fell by " + -1*your_move.getAtk() + " stages");
+                    atk+=your_move.getAtk();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack cannot be lowered anymore");
+                }
+            }else if(your_move.getAtk()>0){
+                if(atk<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack rose by " + your_move.getAtk() + " stages");
+                    atk+=your_move.getAtk();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack cannot be raised anymore");
+                }
+            }
+            if(your_move.getDef()<0){
+                if(def>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense fell by " + -1*your_move.getDef() + " stages");
+                    def+=your_move.getDef();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense cannot be lowered anymore");
+                }
+            }else if(your_move.getDef()>0){
+                if(def<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense rose by " + your_move.getDef() + " stages");
+                    def+=your_move.getDef();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense cannot be raised anymore");
+                }
+            }
+            if(your_move.getSp()<0){
+                if(sp>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed fell by " + -1*your_move.getSp() + " stages");
+                    sp+=your_move.getSp();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed cannot be lowered anymore");
+                }
+            }else if(your_move.getSp()>0){
+                if(sp<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed rose by " + your_move.getSp() + " stages");
+                    sp+=your_move.getSp();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed cannot be raised anymore");
+                }
+            }
+                    
+            if(your_move.getFAtk()<0){ //print output to show change in stats
+                if(foe_atk>-6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack fell by " + -1*your_move.getFAtk() + " stages");
+                    foe_atk+=your_move.getFAtk();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack cannot be lowered anymore");
+                }
+            }else if(your_move.getFAtk()>0){
+                if(foe_atk<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack rose by " + your_move.getFAtk() + " stages");
+                    foe_atk+=your_move.getFAtk();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack cannot be raised anymore");
+                }
+            }
+            if(your_move.getFDef()<0){
+                if(foe_def>-6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense fell by " + -1*your_move.getFDef() + " stages");
+                    foe_def+=your_move.getFDef();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense cannot be lowered anymore");
+                }
+            }else if(your_move.getFDef()>0){
+                if(foe_def<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense rose by " + your_move.getFDef() + " stages");
+                    foe_def+=your_move.getFDef();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense cannot be raised anymore");
+                }
+            }
+            if(your_move.getFSp()<0){
+                if(foe_sp>-6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed fell by " + -1*your_move.getFSp() + " stages");
+                    foe_sp+=your_move.getFSp();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed cannot be lowered anymore");
+                }
+            }else if(your_move.getFSp()>0){
+                if(foe_sp<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed rose by " + your_move.getFSp() + " stages");
+                    foe_sp+=your_move.getFSp();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed cannot be raised anymore");
+                }
+            }
+        }else if(your_move.getCategory().equals("heal")){
+            int healing = (int)(your_pokemon.findmaxhp()*your_move.gethpheal());
+            your_pokemon.heal(healing);
+        }else if(your_move.getCategory().equals("sp")){
+            int damage = 0;
+            int currentfoehp = foe_pokemon.findcurrenthp();
+            if(your_move.getPower()!=0){
+                int base_power = your_move.getPower();
+                String your_move_type = your_move.getType();
+                double effectiveness = foe_pokemon.findEffectiveness(your_move_type);
+                double same_type = 1;
+                if(your_pokemon.findtype1().equals(your_move.getType())||your_pokemon.findtype2().equals(your_move.getType())){
+                    same_type = 1.5;
+                }
+                damage = (int)(base_power*same_type*effectiveness*atk_ratio/foe_def_ratio);
+                if(effectiveness>1.0){
+                    System.out.println("It's super effective!");
+                }else if(effectiveness<1.0&&effectiveness>0){
+                    System.out.println("It's not very effective...");
+                }else if(effectiveness==0.0){
+                    System.out.println("This move does not have any effect on " + foe_pokemon.findname());
+                }
+                foe_pokemon.takedmg(damage);
+            }
+            if(your_move.getAtk()<0){ //print output to show change in stats
+                if(atk>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack fell by " + -1*your_move.getAtk() + " stages");
+                    atk+=your_move.getAtk();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack cannot be lowered anymore");
+                }
+            }else if(your_move.getAtk()>0){
+                if(atk<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack rose by " + your_move.getAtk() + " stages");
+                    atk+=your_move.getAtk();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Attack cannot be raised anymore");
+                }
+            }
+            if(your_move.getDef()<0){
+                if(def>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense fell by " + -1*your_move.getDef() + " stages");
+                    def+=your_move.getDef();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense cannot be lowered anymore");
+                }
+            }else if(your_move.getDef()>0){
+                if(def<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense rose by " + your_move.getDef() + " stages");
+                    def+=your_move.getDef();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Defense cannot be raised anymore");
+                }
+            }
+            if(your_move.getSp()<0){
+                if(sp>-6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed fell by " + -1*your_move.getSp() + " stages");
+                    sp+=your_move.getSp();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed cannot be lowered anymore");
+                }
+            }else if(your_move.getSp()>0){
+                if(sp<6){
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed rose by " + your_move.getSp() + " stages");
+                    sp+=your_move.getSp();
+                }else{
+                    System.out.println("Your " + your_pokemon.findname() + "'s Speed cannot be raised anymore");
+                }
+            }
+                    
+            if(your_move.getFAtk()<0){ //print output to show change in stats
+                if(foe_atk>-6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack fell by " + -1*your_move.getFAtk() + " stages");
+                    foe_atk+=your_move.getFAtk();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack cannot be lowered anymore");
+                }
+            }else if(your_move.getFAtk()>0){
+                if(foe_atk<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack rose by " + your_move.getFAtk() + " stages");
+                    foe_atk+=your_move.getFAtk();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Attack cannot be raised anymore");
+                }
+            }
+            if(your_move.getFDef()<0){
+                if(foe_def>-6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense fell by " + -1*your_move.getFDef() + " stages");
+                    foe_def+=your_move.getFDef();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense cannot be lowered anymore");
+                }
+            }else if(your_move.getFDef()>0){
+                if(foe_def<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense rose by " + your_move.getFDef() + " stages");
+                    foe_def+=your_move.getFDef();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Defense cannot be raised anymore");
+                }
+            }
+            if(your_move.getFSp()<0){
+                if(foe_sp>-6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed fell by " + -1*your_move.getFSp() + " stages");
+                    foe_sp+=your_move.getFSp();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed cannot be lowered anymore");
+                }
+            }else if(your_move.getFSp()>0){
+                if(foe_sp<6){
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed rose by " + your_move.getFSp() + " stages");
+                    foe_sp+=your_move.getFSp();
+                }else{
+                    System.out.println("Opponent " + foe_pokemon.findname() + "'s Speed cannot be raised anymore");
+                }
+            }
+                    
+            if(your_move.getdmgheal()!=0.0){
+                if(damage>currentfoehp){ //to prevent overhealing from overkill, etc opponent have 10hp left, you hit 1000 and heal rate is 50% you are supposed to leech only 5 hp from your attack and not 500
+                    int healing = (int)(currentfoehp*your_move.getdmgheal());
+                    your_pokemon.heal(healing);
+                }else{
+                    int healing = (int)(damage*your_move.getdmgheal());
+                    your_pokemon.heal(healing);
+                }
+            }
+        }
     }
 }

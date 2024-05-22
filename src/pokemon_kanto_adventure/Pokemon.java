@@ -275,6 +275,8 @@ public class Pokemon {
     }
     public void obtainxp(int e){
         if(level!=max_level){
+            System.out.printf("+%s+\n","-".repeat(90));
+            System.out.println(name + " obtained " + e + " xp!");
             if(e<currentxp){
                 currentxp = currentxp - e;
             }else{
