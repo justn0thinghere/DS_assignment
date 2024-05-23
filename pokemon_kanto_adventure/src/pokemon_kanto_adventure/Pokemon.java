@@ -261,6 +261,12 @@ public class Pokemon {
     public boolean isFaint(){
         return faint;
     }
+    public void setcurrenthp(int h){
+        currenthp = h;
+    }
+    public void setxp(int x){
+        currentxp = x;
+    }
     public void takedmg(int d){
         System.out.printf("+%s+\n","-".repeat(90));
         System.out.println(name + " took " + d + " damage");
@@ -276,10 +282,12 @@ public class Pokemon {
     public void obtainxp(int e){
         if(level!=max_level){
             System.out.printf("+%s+\n","-".repeat(90));
-            System.out.println(name + " obtained " + e + " xp!");
+            
             if(e<currentxp){
                 currentxp = currentxp - e;
+                System.out.println(name + " obtained " + e + " xp!");
             }else{
+                System.out.println(name + " obtained " + currentxp + " xp!");
                 e = e-currentxp;
                 currentxp = 0;
                 levelup();

@@ -39,8 +39,6 @@ public class Pokemon_kanto_adventure {
         a.addPokemon(new Pokemon("Ponyta",15));
         a.addPokemon(new Pokemon("Pikachu",15));
         a.addPokemon(new Pokemon("Victreebel",50));
-        System.out.println("");
-        System.out.println("");
         title();
         selectionPanel(a);
         
@@ -135,6 +133,7 @@ public class Pokemon_kanto_adventure {
             String choice = input.nextLine();
         
             // Handle player's choice
+            if(choice.length()!=0){
             if (choice.charAt(0)=='1'&&choice.length()==2) {
                 if(choice.charAt(1)>='a'&&choice.charAt(1)<'a'+neighboringCities.size()){
                     int cityIndex = choice.charAt(1) - 'a';
@@ -190,6 +189,9 @@ public class Pokemon_kanto_adventure {
             } else {
                 System.out.println("Invalid choice! Please choose again.");
             }
+            }else{
+                System.out.println("Invalid choice! Please choose again.");
+            }
             return true;
     }
     public static boolean selectionViridianCity(Player player){
@@ -212,6 +214,7 @@ public class Pokemon_kanto_adventure {
             String choice = input.nextLine();
         
             // Handle player's choice
+            if(choice.length()!=0){
             if (choice.charAt(0)=='1'&&choice.length()==2) {
                 if(choice.charAt(1)>='a'&&choice.charAt(1)<'a'+neighboringCities.size()){
                     int cityIndex = choice.charAt(1) - 'a';
@@ -235,7 +238,13 @@ public class Pokemon_kanto_adventure {
                     if(player.getbadges()[0].equals("Boulder Badge")&&player.getbadges()[1].equals("Cascade Badge")&&player.getbadges()[2].equals("Thunder Badge")&&player.getbadges()[3].equals("Rainbow Badge")&&player.getbadges()[4].equals("Soul Badge")&&player.getbadges()[5].equals("Marsh Badge")&&player.getbadges()[6].equals("Volcano Badge")){
                         System.out.println("You have all other gym badges! This is your final battle. Good luck!");
                         System.out.println("You are now challenging Gym Leader Giovanni!");
-                        //implement viridiangym()
+                        Battle gymbattle = new Battle(player,"Giovanni");
+                        
+                        if(gymbattle.getwin()){
+                            System.out.println("Giovanni: You are sure the strongest trainer in this region, here is the Earth Badge. It is evidence of your mastery as a Pokémon Trainer.");
+                            player.obtainbadge("Earth Badge");
+                        }
+                        
                     }else{
                         System.out.println("You have not obtained all the other badges yet, Giovanni is the strongest leader in the region.");
                         System.out.println("You are not strong enough to face him at this moment, please come back with all other badges to prove that you are a worthy opponent");
@@ -274,6 +283,9 @@ public class Pokemon_kanto_adventure {
             } else {
                 System.out.println("Invalid choice! Please choose again.");
             }
+            }else{
+                System.out.println("Invalid choice! Please choose again.");
+            }
             return true;
     }
     public static boolean selectionPewterCity(Player player){
@@ -297,8 +309,9 @@ public class Pokemon_kanto_adventure {
             // Get player's choice
             System.out.print("Your choice: ");
             String choice = input.nextLine();
-        
+            
             // Handle player's choice
+            if(choice.length()!=0){
             if (choice.charAt(0)=='1'&&choice.length()==2) {
                 if(choice.charAt(1)>='a'&&choice.charAt(1)<'a'+neighboringCities.size()){
                     int cityIndex = choice.charAt(1) - 'a';
@@ -318,8 +331,16 @@ public class Pokemon_kanto_adventure {
             }else if (choice.equals("3")) {
                 pokeMart(player);
             }else if(choice.equals("4")){
+                if(!player.getbadges()[0].equals("Boulder Badge")){
                 System.out.println("You are now challenging Gym Leader Brock!");
-                //implement pewtergym()
+                Battle gymbattle = new Battle(player,"Brock");
+                if(gymbattle.getwin()){
+                    player.obtainbadge("Boulder Badge");
+                    System.out.println("Brock: I took you for granted, and so I lost. As proof of your victory, I confer on you this...the official Boulder Badge.");
+                }
+                }else{
+                    System.out.println("You have already challenged this gym.");
+                }
             }else if(choice.equals("5")){
                 Random r = new Random();
                 String[]wilds = {"Caterpie","Metapod","Pikachu"};
@@ -334,12 +355,15 @@ public class Pokemon_kanto_adventure {
                 switch(player_choice){
                     case 'a':
                         //fight rick - caterpie lvl 6, caterpie lvl 6
+                        Battle trainerbattle = new Battle(player,"Rick");
                         break;
                     case 'b':
                         //fight anthony - caterpie lvl 9
+                        trainerbattle = new Battle(player,"Anthony");
                         break;
                     case 'c':
                         //fight Charlie - pikachu lvl 9
+                        trainerbattle = new Battle(player,"Charlie");
                         break;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -375,6 +399,9 @@ public class Pokemon_kanto_adventure {
             } else {
                 System.out.println("Invalid choice! Please choose again.");
             }
+            }else{
+                System.out.println("Invalid choice! Please choose again");
+            }
             return true;
     }
     public static boolean selectionCeruleanCity(Player player){
@@ -400,6 +427,7 @@ public class Pokemon_kanto_adventure {
             String choice = input.nextLine();
         
             // Handle player's choice
+            if(choice.length()!=0){
             if (choice.charAt(0)=='1'&&choice.length()==2) {
                 if(choice.charAt(1)>='a'&&choice.charAt(1)<'a'+neighboringCities.size()){
                     int cityIndex = choice.charAt(1) - 'a';
@@ -419,8 +447,16 @@ public class Pokemon_kanto_adventure {
             }else if (choice.equals("3")) {
                 pokeMart(player);
             }else if(choice.equals("4")){
+                if(!player.getbadges()[1].equals("Cascade Badge")){
                 System.out.println("You are now challenging Gym Leader Misty!");
-                //implement ceruleangym()
+                Battle gymbattle = new Battle(player,"Misty");
+                if(gymbattle.getwin()){
+                    player.obtainbadge("Cascade Badge");
+                    System.out.println("Misty: Wow! You're too much, all right! You can have the Cascade Badge to show that you beat me.");
+                }
+                }else{
+                    System.out.println("You have already challenged this gym");
+                }
             }else if(choice.equals("5")){
                 Random r = new Random();
                 String[]wilds = {"Sandshrew", "Geodude", "Onix"};
@@ -435,12 +471,15 @@ public class Pokemon_kanto_adventure {
                 switch(player_choice){
                     case 'a':
                         //fight grunt - machop lvl 17, sandshrew lvl 17
+                        Battle trainerbattle = new Battle(player,"Rocket Grunt");
                         break;
                     case 'b':
                         //fight marcos - 2x geodude lvl 11, onix lvl 11
+                        trainerbattle = new Battle(player,"Marcos");
                         break;
                     case 'c':
                         //fight Jovan - voltorb lvl 14, magnemite lvl 14
+                        trainerbattle = new Battle(player,"Jovan");
                         break;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -474,6 +513,9 @@ public class Pokemon_kanto_adventure {
                         System.out.println("Invalid choice! Please choose again.");
                 }
             } else {
+                System.out.println("Invalid choice! Please choose again.");
+            }
+            }else{
                 System.out.println("Invalid choice! Please choose again.");
             }
             return true;
@@ -502,6 +544,7 @@ public class Pokemon_kanto_adventure {
             String choice = input.nextLine();
         
             // Handle player's choice
+            if(choice.length()!=0){
             if (choice.charAt(0)=='1'&&choice.length()==2) {
                 if(choice.charAt(1)>='a'&&choice.charAt(1)<'a'+neighboringCities.size()){
                     int cityIndex = choice.charAt(1) - 'a';
@@ -521,8 +564,16 @@ public class Pokemon_kanto_adventure {
             }else if (choice.equals("3")) {
                 pokeMart(player);
             }else if(choice.equals("4")){
+                if(!player.getbadges()[5].equals("Marsh Badge")){
                 System.out.println("You are now challenging Gym Leader Sabrina!");
-                //implement saffrongym()
+                Battle gymbattle = new Battle(player, "Sabrina");
+                if(gymbattle.getwin()){
+                    player.obtainbadge("Marsh Badge");
+                    System.out.println("Sabrina: This loss shocks me! But a loss is a loss. I admit I didn't work hard enough to win. You earned the Marsh Badge.");
+                }
+                }else{
+                    System.out.println("You have already challenged this gym.");
+                }
             }else if(choice.equals("5")){
                 Random r = new Random();
                 String[]wilds = {"Oddish", "Bellsprout", "Growlithe", "Abra"};
@@ -537,12 +588,15 @@ public class Pokemon_kanto_adventure {
                 switch(player_choice){
                     case 'a':
                         //fight ricky - wartortle lvl 30
+                        Battle trainerbattle = new Battle(player,"Ricky");
                         break;
                     case 'b':
                         //fight Jeff - 2x raticate lvl 29
+                        trainerbattle = new Battle(player,"Jeff");
                         break;
                     case 'c':
                         //fight Elijah - Butterfree lvl 30
+                        trainerbattle = new Battle(player,"Elijah");
                         break;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -579,6 +633,9 @@ public class Pokemon_kanto_adventure {
             } else {
                 System.out.println("Invalid choice! Please choose again.");
             }
+            }else{
+                System.out.println("Invalid choice! Please choose again.");
+            }
             return true;
     }
     public static boolean selectionCeladonCity(Player player){
@@ -605,6 +662,7 @@ public class Pokemon_kanto_adventure {
             String choice = input.nextLine();
         
             // Handle player's choice
+            if(choice.length()!=0){
             if (choice.charAt(0)=='1'&&choice.length()==2) {
                 if(choice.charAt(1)>='a'&&choice.charAt(1)<'a'+neighboringCities.size()){
                     int cityIndex = choice.charAt(1) - 'a';
@@ -624,8 +682,16 @@ public class Pokemon_kanto_adventure {
             }else if (choice.equals("3")) {
                 pokeMart(player);
             }else if(choice.equals("4")){
-                System.out.println("You are now challenging Gym Leader Erika!");
-                //implement celadongym()
+                if(!player.getbadges()[3].equals("Rainbow Badge")){
+                    System.out.println("You are now challenging Gym Leader Erika!");
+                    Battle gymbattle = new Battle(player,"Erika");
+                    if(gymbattle.getwin()){
+                        player.obtainbadge("Rainbow Badge");
+                        System.out.println("Erika: Oh! I concede defeat. You are remarkably strong. I must confer on you the Rainbow Badge.");
+                    }
+                }else{
+                    System.out.println("You have already challenged this gym.");
+                }
             }else if(choice.equals("5")){
                 Random r = new Random();
                 String[]wilds = {"Koffing", "Grimer", "Machop","Ponyta"};
@@ -644,12 +710,15 @@ public class Pokemon_kanto_adventure {
                 switch(player_choice){
                     case 'a':
                         //fight lao - grimer lvl 27, koffing lvl 27
+                        Battle trainerbattle = new Battle(player,"Lao");
                         break;
                     case 'b':
                         //fight koji - machop lvl 27, mankey lvl 27
+                        trainerbattle = new Battle(player,"Koji");
                         break;
                     case 'c':
                         //fight lea - rapidash lvl 27
+                        trainerbattle = new Battle(player,"Lea");
                         break;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -685,6 +754,9 @@ public class Pokemon_kanto_adventure {
             } else {
                 System.out.println("Invalid choice! Please choose again.");
             }
+            }else{
+                System.out.println("Invalid choice! Please choose again.");
+            }
             return true;
     }
     public static boolean selectionLavenderTown(Player player){
@@ -711,6 +783,7 @@ public class Pokemon_kanto_adventure {
             String choice = input.nextLine();
         
             // Handle player's choice
+            if(choice.length()!=0){
             if (choice.charAt(0)=='1'&&choice.length()==2) {
                 if(choice.charAt(1)>='a'&&choice.charAt(1)<'a'+neighboringCities.size()){
                     int cityIndex = choice.charAt(1) - 'a';
@@ -750,12 +823,15 @@ public class Pokemon_kanto_adventure {
                 switch(player_choice){
                     case 'a':
                         //fight luca - voltorb, electrode lvl 29
+                        Battle trainerbattle = new Battle(player,"Luca");
                         break;
                     case 'b':
                         //fight justin - Nidoran-M,Nidoran-F, lvl 29
+                        trainerbattle = new Battle(player,"Justin");
                         break;
                     case 'c':
                         //fight tower grunt - rattata, raticate lvl 27
+                        trainerbattle = new Battle(player,"Tower Grunt");
                         break;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -791,6 +867,9 @@ public class Pokemon_kanto_adventure {
             } else {
                 System.out.println("Invalid choice! Please choose again.");
             }
+            }else{
+                System.out.println("Invalid choice! Please choose again.");
+            }
             return true;
     }
     public static boolean selectionVermillionCity(Player player){
@@ -816,6 +895,7 @@ public class Pokemon_kanto_adventure {
             String choice = input.nextLine();
         
             // Handle player's choice
+            if(choice.length()!=0){
             if (choice.charAt(0)=='1'&&choice.length()==2) {
                 if(choice.charAt(1)>='a'&&choice.charAt(1)<'a'+neighboringCities.size()){
                     int cityIndex = choice.charAt(1) - 'a';
@@ -835,8 +915,17 @@ public class Pokemon_kanto_adventure {
             }else if (choice.equals("3")) {
                 pokeMart(player);
             }else if(choice.equals("4")){
-                System.out.println("You are now challenging Gym Leader Lt. Surge!");
-                //implement gym()
+                if(!player.getbadges()[2].equals("Thunder Badge")){
+                    System.out.println("You are now challenging Gym Leader Lt. Surge!");
+                    Battle gymbattle = new Battle(player,"Lt. Surge");
+                    if(gymbattle.getwin()){
+                        player.obtainbadge("Thunder Badge");
+                        System.out.println("Lt. Surge: Now that's a shocker! You're the real deal, kid! Fine, then, take the Thunder Badge!");
+                    }
+                }else{
+                    System.out.println("You have already challenged this gym");
+                }
+                
             }else if(choice.equals("5")){
                 Random r = new Random();
                 String[]wilds = {"Diglett", "Jigglypuff", "Eevee"};
@@ -851,12 +940,15 @@ public class Pokemon_kanto_adventure {
                 switch(player_choice){
                     case 'a':
                         //fight yasu - 2x rattata, raticate lvl 17
+                        Battle trainerbattle = new Battle(player,"Yasu");
                         break;
                     case 'b':
                         //fight dave - nidoran-m,nidorino lvl 18
+                        trainerbattle = new Battle(player,"Dave");
                         break;
                     case 'c':
                         //fight bernie - 2x magnemite, magneton lvl 18
+                        trainerbattle = new Battle(player,"Bernie");
                         break;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -892,6 +984,9 @@ public class Pokemon_kanto_adventure {
             } else {
                 System.out.println("Invalid choice! Please choose again.");
             }
+            }else{
+                System.out.println("Invalid choice! Please choose again.");
+            }
             return true;
     }
     public static boolean selectionFuschiaCity(Player player){
@@ -918,6 +1013,7 @@ public class Pokemon_kanto_adventure {
             String choice = input.nextLine();
         
             // Handle player's choice
+            if(choice.length()!=0){
             if (choice.charAt(0)=='1'&&choice.length()==2) {
                 if(choice.charAt(1)>='a'&&choice.charAt(1)<'a'+neighboringCities.size()){
                     int cityIndex = choice.charAt(1) - 'a';
@@ -937,8 +1033,16 @@ public class Pokemon_kanto_adventure {
             }else if (choice.equals("3")) {
                 pokeMart(player);
             }else if(choice.equals("4")){
-                System.out.println("You are now challenging Gym Leader Koga!");
-                //implement gym()
+                if(!player.getbadges()[4].equals("Soul Badge")){
+                    System.out.println("You are now challenging Gym Leader Koga!");
+                    Battle gymbattle = new Battle(player,"Koga");
+                    if(gymbattle.getwin()){
+                        player.obtainbadge("Soul Badge");
+                        System.out.println("Koga: Humph! You have proven your worth! Here! Take the Soul Badge!");
+                    }
+                }else{
+                    System.out.println("You have already challenged this gym.");
+                }
             }else if(choice.equals("5")){
                 Random r = new Random();
                 String[]wilds = {"Grimer", "Rattata", "Raticate"};
@@ -953,12 +1057,15 @@ public class Pokemon_kanto_adventure {
                 switch(player_choice){
                     case 'a':
                         //fight charles - koffing, weezing lvl 39
+                        Battle trainerbattle = new Battle(player,"Charles");
                         break;
                     case 'b':
                         //fight jacob - charmeleon lvl 39
+                        trainerbattle = new Battle(player,"Jacob");
                         break;
                     case 'c':
                         //fight connie - 3x staryu lvl 33
+                        trainerbattle = new Battle(player,"Connie");
                         break;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -995,6 +1102,9 @@ public class Pokemon_kanto_adventure {
             } else {
                 System.out.println("Invalid choice! Please choose again.");
             }
+            }else{
+                System.out.println("Invalid choice! Please choose again.");
+            }
             return true;
     }
     public static boolean selectionCinnabarIsland(Player player){
@@ -1020,6 +1130,7 @@ public class Pokemon_kanto_adventure {
             String choice = input.nextLine();
         
             // Handle player's choice
+            if(choice.length()!=0){
             if (choice.charAt(0)=='1'&&choice.length()==2) {
                 if(choice.charAt(1)>='a'&&choice.charAt(1)<'a'+neighboringCities.size()){
                     int cityIndex = choice.charAt(1) - 'a';
@@ -1039,8 +1150,17 @@ public class Pokemon_kanto_adventure {
             }else if (choice.equals("3")) {
                 pokeMart(player);
             }else if(choice.equals("4")){
-                System.out.println("You are now challenging Gym Leader Blaine!");
-                //implement gym()
+                if(!player.getbadges()[6].equals("Volcano Badge")){
+                    System.out.println("You are now challenging Gym Leader Blaine!");
+                    Battle gymbattle = new Battle(player,"Blaine");
+                    if(gymbattle.getwin()){
+                        player.obtainbadge("Volcano Badge");
+                        System.out.println("Blaine: I have burned down to nothing! Not even ashes remain! You have earned the Volcano Badge.");
+                    }
+                }else{
+                    System.out.println("You have already challenged this gym.");
+                }
+            
             }else if(choice.equals("5")){
                 Random r = new Random();
                 String[]wilds = {"Staryu", "Tangela"};
@@ -1055,12 +1175,15 @@ public class Pokemon_kanto_adventure {
                 switch(player_choice){
                     case 'a':
                         //fight lil - starmie lvl 33
+                        Battle trainerbattle = new Battle(player,"Lil");
                         break;
                     case 'b':
                         //fight jack - starmie lvl 37
+                        trainerbattle = new Battle(player,"Jack");
                         break;
                     case 'c':
                         //fight jerome - staryu lvl 33, wartortle lvl 33
+                        trainerbattle = new Battle(player,"Jerome");
                         break;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -1094,6 +1217,9 @@ public class Pokemon_kanto_adventure {
                         System.out.println("Invalid choice! Please choose again.");
                 }
             } else {
+                System.out.println("Invalid choice! Please choose again.");
+            }
+            }else{
                 System.out.println("Invalid choice! Please choose again.");
             }
             return true;
