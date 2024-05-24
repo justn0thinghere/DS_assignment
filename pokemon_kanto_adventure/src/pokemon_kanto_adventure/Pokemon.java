@@ -186,6 +186,7 @@ public class Pokemon {
                 System.out.println(" - " + types[i]);
             }
         }
+        System.out.println("moves");
     }
     public void showWeakness(){
         System.out.println(name + " is weak against: ");

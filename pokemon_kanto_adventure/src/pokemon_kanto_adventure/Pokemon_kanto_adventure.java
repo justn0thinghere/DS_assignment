@@ -125,7 +125,7 @@ public class Pokemon_kanto_adventure {
             System.out.println("[3] Fight Wild Pokemon [Caterpie, Rattata, Mankey][max lvl 5]");
             System.out.println("[4] Player Options");
             
-            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.Save and Exit");
+            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.PC     h.Save and Exit");
             System.out.printf("+%s+\n","-".repeat(90));
 
             // Get player's choice
@@ -181,6 +181,9 @@ public class Pokemon_kanto_adventure {
                         guides();
                         break;
                     case 'g':
+                        player.alterPC(player);
+                        break;
+                    case 'h':
                         save();
                         return false;
                     default:
@@ -206,7 +209,7 @@ public class Pokemon_kanto_adventure {
             System.out.println("[4] Fight Gym Leader [ Giovanni - Ground type ] [Recommended Pokemon Level: 50]");
             System.out.println("[5] Player Options");
             
-            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.Save and Exit");
+            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.PC     h.Save and Exit");
             System.out.printf("+%s+\n","-".repeat(90));
 
             // Get player's choice
@@ -275,6 +278,9 @@ public class Pokemon_kanto_adventure {
                         guides();
                         break;
                     case 'g':
+                        player.alterPC(player);
+                        break;
+                    case 'h':
                         save();
                         return false;
                     default:
@@ -303,7 +309,7 @@ public class Pokemon_kanto_adventure {
             System.out.println("     a.Rick[Bug type][lvl 6]    b.Anthony[Bug type][lvl 9]     c.Charlie[Electric type][lvl 8]");
             System.out.println("[7] Player Options");
             
-            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.Save and Exit");
+            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.PC     h.Save and Exit");
             System.out.printf("+%s+\n","-".repeat(90));
 
             // Get player's choice
@@ -391,6 +397,9 @@ public class Pokemon_kanto_adventure {
                         guides();
                         break;
                     case 'g':
+                        player.alterPC(player);
+                        break;
+                    case 'h':
                         save();
                         return false;
                     default:
@@ -419,7 +428,7 @@ public class Pokemon_kanto_adventure {
             System.out.println("     a.Rocket Grunt[Ground, Fighting type][lvl 17]    b.Marcos[Rock type][lvl 11]     c.Jovan[Electric type][lvl 14]");
             System.out.println("[7] Player Options");
             
-            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.Save and Exit");
+            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.PC     h.Save and Exit");
             System.out.printf("+%s+\n","-".repeat(90));
 
             // Get player's choice
@@ -507,6 +516,9 @@ public class Pokemon_kanto_adventure {
                         guides();
                         break;
                     case 'g':
+                        player.alterPC(player);
+                        break;
+                    case 'h':
                         save();
                         return false;
                     default:
@@ -536,7 +548,7 @@ public class Pokemon_kanto_adventure {
             System.out.println("[7] Rival Race");
             System.out.println("[8] Player Options");
             
-            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.Save and Exit");
+            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.PC     h.Save and Exit");
             System.out.printf("+%s+\n","-".repeat(90));
 
             // Get player's choice
@@ -625,6 +637,9 @@ public class Pokemon_kanto_adventure {
                         guides();
                         break;
                     case 'g':
+                        player.alterPC(player);
+                        break;
+                    case 'h':
                         save();
                         return false;
                     default:
@@ -654,7 +669,7 @@ public class Pokemon_kanto_adventure {
             System.out.println("     a.Lao[Poison type][lvl 27]    b.Koji[Fighting type][lvl 27]     c.Lea[Fire type][lvl 27]");
             System.out.println("[8] Player Options");
             
-            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.Save and Exit");
+            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.PC     h.Save and Exit");
             System.out.printf("+%s+\n","-".repeat(90));
 
             // Get player's choice
@@ -746,6 +761,9 @@ public class Pokemon_kanto_adventure {
                         guides();
                         break;
                     case 'g':
+                        player.alterPC(player);
+                        break;
+                    case 'h':
                         save();
                         return false;
                     default:
@@ -775,7 +793,7 @@ public class Pokemon_kanto_adventure {
             System.out.println("     a.Luca[Electric type][lvl 29]    b.Justin[Poison type][lvl 29]     c.Tower Grunt[Normal type][lvl 27]");
             System.out.println("[8] Player Options");
             
-            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.Save and Exit");
+            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.PC     h.Save and Exit");
             System.out.printf("+%s+\n","-".repeat(90));
 
             // Get player's choice
@@ -859,6 +877,9 @@ public class Pokemon_kanto_adventure {
                         guides();
                         break;
                     case 'g':
+                        player.alterPC(player);
+                        break;
+                    case 'h':
                         save();
                         return false;
                     default:
@@ -887,7 +908,7 @@ public class Pokemon_kanto_adventure {
             System.out.println("     a.Yasu[Normal type][lvl 17]    b.Dave[Poison type][lvl 18]     c.Bernie[Electric type][lvl 18]");
             System.out.println("[7] Player Options");
             
-            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.Save and Exit");
+            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.PC     h.Save and Exit");
             System.out.printf("+%s+\n","-".repeat(90));
 
             // Get player's choice
@@ -976,6 +997,9 @@ public class Pokemon_kanto_adventure {
                         guides();
                         break;
                     case 'g':
+                        player.alterPC(player);
+                        break;
+                    case 'h':
                         save();
                         return false;
                     default:
@@ -1005,7 +1029,7 @@ public class Pokemon_kanto_adventure {
             System.out.println("[7] Safari Zone");
             System.out.println("[8] Player Options");
             
-            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.Save and Exit");
+            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.PC     h.Save and Exit");
             System.out.printf("+%s+\n","-".repeat(90));
 
             // Get player's choice
@@ -1094,6 +1118,9 @@ public class Pokemon_kanto_adventure {
                         guides();
                         break;
                     case 'g':
+                        player.alterPC(player);
+                        break;
+                    case 'h':
                         save();
                         return false;
                     default:
@@ -1122,7 +1149,7 @@ public class Pokemon_kanto_adventure {
             System.out.println("     a.Lil[Water type][lvl 33]    b.Jack[Water type][lvl 37]     c.Jerome[Water type][lvl 33]");
             System.out.println("[7] Player Options");
             
-            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.Save and Exit");
+            System.out.println("     a.Map     b.Pokemons     c.Bag     d.Badges     e.Profile     f.Guides     g.PC     h.Save and Exit");
             System.out.printf("+%s+\n","-".repeat(90));
 
             // Get player's choice
@@ -1211,6 +1238,9 @@ public class Pokemon_kanto_adventure {
                         guides();
                         break;
                     case 'g':
+                        player.alterPC(player);
+                        break;
+                    case 'h':
                         save();
                         return false;
                     default:
@@ -2070,8 +2100,10 @@ public class Pokemon_kanto_adventure {
                 System.out.printf("+%s+\n","-".repeat(90));
                 break;
         }
-        
+  
     }
+    
+    
 }
 
     

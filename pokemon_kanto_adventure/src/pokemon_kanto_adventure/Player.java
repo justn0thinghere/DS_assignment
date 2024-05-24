@@ -950,6 +950,7 @@ public class Player {
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
                         String line = input.nextLine();
+                        if(line.length()!=0){
                         if(line.charAt(0)=='y'&&line.length()==2){
                             int poke = line.charAt(1)-'0';
                             System.out.println("Selected pokemon on slot: " + poke);
@@ -1083,6 +1084,9 @@ public class Player {
                         }else{
                             System.out.println("Invalid input");
                         }
+                        }else{
+                            System.out.println("Invalid input, please choose again");
+                        }
                     }
                     if(items.get("Potion")==0){
                         System.out.printf("+%s+\n","-".repeat(90));
@@ -1100,6 +1104,7 @@ public class Player {
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
                         String line = input.nextLine();
+                        if(line.length()!=0){
                         if(line.charAt(0)=='y'&&line.length()==2){
                             int poke = line.charAt(1)-'0';
                             System.out.println("Selected pokemon on slot: " + poke);
@@ -1233,6 +1238,9 @@ public class Player {
                         }else{
                             System.out.println("Invalid input");
                         }
+                        }else{
+                            System.out.println("Invalid input, please choose again");
+                        }
                     }
                     if(items.get("Super Potion")==0){
                         System.out.printf("+%s+\n","-".repeat(90));
@@ -1250,6 +1258,7 @@ public class Player {
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
                         String line = input.nextLine();
+                        if(line.length()!=0){
                         if(line.charAt(0)=='y'&&line.length()==2){
                             int poke = line.charAt(1)-'0';
                             System.out.println("Selected pokemon on slot: " + poke);
@@ -1383,6 +1392,9 @@ public class Player {
                         }else{
                             System.out.println("Invalid input");
                         }
+                        }else{
+                            System.out.println("Invalid choice, please choose again");
+                        }
                     }
                     if(items.get("Hyper Potion")==0){
                         System.out.printf("+%s+\n","-".repeat(90));
@@ -1400,6 +1412,7 @@ public class Player {
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
                         String line = input.nextLine();
+                        if(line.length()!=0){
                         if(line.charAt(0)=='y'&&line.length()==2){
                             int poke = line.charAt(1)-'0';
                             System.out.println("Selected pokemon on slot: " + poke);
@@ -1533,6 +1546,9 @@ public class Player {
                         }else{
                             System.out.println("Invalid input");
                         }
+                        }else{
+                            System.out.println("Invalid input, please choose again");
+                        }
                     }
                     if(items.get("Max Potion")==0){
                         System.out.printf("+%s+\n","-".repeat(90));
@@ -1562,6 +1578,7 @@ public class Player {
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
                         String line = input.nextLine();
+                        if(line.length()!=0){
                         if(line.charAt(0)=='y'&&line.length()==2){
                             int poke = line.charAt(1)-'0';
                             System.out.println("Selected pokemon on slot: " + poke);
@@ -1671,6 +1688,9 @@ public class Player {
                         }else{
                             System.out.println("Invalid input");
                         }
+                        }else{
+                            System.out.println("Invalid choice, choose again");
+                        }
                     }
                     if(items.get("Revive")==0){
                         System.out.printf("+%s+\n","-".repeat(90));
@@ -1696,5 +1716,125 @@ public class Player {
         pokemon4.fullres();
         pokemon5.fullres();
         pokemon6.fullres();
+    }
+    
+    public void alterPC(Player player){
+        Scanner input = new Scanner(System.in);
+        if(PC.isEmpty()){
+            System.out.println("Your PC is empty.");
+        }else{
+            all:
+            while(true){
+                System.out.println("+--------------PC---------------+");
+                for(int i = 0;i<PC.size();i++){
+                    Pokemon poke = PC.get(i);
+                    System.out.println((i+1) + ". " + poke.findname() + " [ level " + poke.findlvl() + " ] ");
+                }
+                System.out.println((PC.size() + 1) + ". Back");
+                System.out.print("Enter your choice: ");
+                String choice_st = input.nextLine();
+                if(isNum(choice_st)){
+                    int choice = Integer.parseInt(choice_st);
+                    if(choice<=PC.size()&&choice>0){
+                        Pokemon poke = PC.get(choice-1);
+                        System.out.println("You chose: " + poke.findname() + " [ level " + poke.findlvl() + " ] ");
+                        PCpokeChoice(poke);
+                    }else if(choice==PC.size()+1){
+                        break all;
+                    }else{
+                        System.out.println("Invalid choice, please choose again");
+                    }
+                }else{
+                    System.out.println("Invalid choice, please choose again");
+                }
+            }
+        }
+    }
+    public void PCpokeChoice(Pokemon poke){
+        Scanner input = new Scanner(System.in);
+        System.out.println("+------Pokemon info------+");
+        poke.showPokemonInfo();
+        System.out.println("Do you want to withdraw this pokemon(y-yes/other input-no and go back)?");
+        String choice = input.nextLine();
+        if(choice.equals("y")){
+            if(pokemon1==null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 1.");
+                pokemon1 = poke;
+                PC.remove(poke);
+            }else if(pokemon2 == null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 2.");
+                pokemon2 = poke;
+                PC.remove(poke);
+            }else if(pokemon3==null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 3.");
+                pokemon3 = poke;
+                PC.remove(poke);
+            }else if(pokemon4==null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 4.");
+                pokemon4 = poke;
+                PC.remove(poke);
+            }else if(pokemon5 == null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 5.");
+                pokemon5 = poke;
+                PC.remove(poke);
+            }else if(pokemon6 == null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 6.");
+                pokemon6 = poke;
+                PC.remove(poke);
+            }else{
+                swapp:
+                while(true){
+                System.out.println("Your team is full. Which pokemon do you want to swap with?(1-6 to swap)/(7 to cancel)");
+                String swap_st = input.nextLine();
+                if(isNum(swap_st)){
+                    int swap = Integer.parseInt(swap_st);
+                    switch(swap){
+                        case 1:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon1.findname() + " [ level " + pokemon1.findlvl() + " ] ");
+                            Pokemon temp = pokemon1;
+                            pokemon1 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 2:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon2.findname() + " [ level " + pokemon2.findlvl() + " ] ");
+                            temp = pokemon2;
+                            pokemon2 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 3:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon3.findname() + " [ level " + pokemon3.findlvl() + " ] ");
+                            temp = pokemon3;
+                            pokemon3 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 4:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon4.findname() + " [ level " + pokemon4.findlvl() + " ] ");
+                            temp = pokemon4;
+                            pokemon4 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 5:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon5.findname() + " [ level " + pokemon5.findlvl() + " ] ");
+                            temp = pokemon5;
+                            pokemon5 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 6:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon6.findname() + " [ level " + pokemon6.findlvl() + " ] ");
+                            temp = pokemon6;
+                            pokemon6 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 7:
+                            break swapp;
+                        default:
+                            System.out.println("Invalid choice");
+                    }
+                }else{
+                    System.out.println("Invalid choice, please choose again");
+                }
+                }
+            }
+        }
     }
 }
