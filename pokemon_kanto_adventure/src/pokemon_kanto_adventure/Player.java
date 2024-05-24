@@ -306,29 +306,122 @@ public class Player {
                                                             allhealup();
                                                             System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
                                                         }else{
-                                                            System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $200");
+                                                            int lostmoney = 0;
+                                                            if(money<200){
+                                                                lostmoney = money;
+                                                                money = 0;
+                                                            }else{
+                                                                lostmoney = 200;
+                                                                money-=200;
+                                                            }
+                                                            System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
                                                             allhealup();
                                                             System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
                                                         }
                                                         return true; //if true, then all pokemons in the team is fainted and return true;
                                                     }
                                                 }else{
+                                                    if(currentCity.equals("Pallet Town")){
+                                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                                        allhealup();
+                                                        System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                                                    }else{
+                                                        int lostmoney = 0;
+                                                        if(money<200){
+                                                            lostmoney = money;
+                                                            money = 0;
+                                                        }else{
+                                                            lostmoney = 200;
+                                                            money-=200;
+                                                        }
+                                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
+                                                        allhealup();
+                                                        System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                                                    }
                                                     return true;
                                                 }
                                             }
                                         }else{
+                                            if(currentCity.equals("Pallet Town")){
+                                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                                allhealup();
+                                                System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                                            }else{
+                                                int lostmoney = 0;
+                                                if(money<200){
+                                                    lostmoney = money;
+                                                    money = 0;
+                                                }else{
+                                                    lostmoney = 200;
+                                                    money-=200;
+                                                }
+                                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
+                                                allhealup();
+                                                System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                                            }
                                             return true;
                                         }
                                     }
                                 }else{
+                                    if(currentCity.equals("Pallet Town")){
+                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                        allhealup();
+                                        System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                                    }else{
+                                        int lostmoney = 0;
+                                        if(money<200){
+                                            lostmoney = money;
+                                            money = 0;
+                                        }else{
+                                            lostmoney = 200;
+                                            money-=200;
+                                        }
+                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
+                                        allhealup();
+                                        System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                                    }
                                     return true;
                                 }
                             }
                         }else{
+                            if(currentCity.equals("Pallet Town")){
+                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                allhealup();
+                                System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                            }else{
+                                int lostmoney = 0;
+                                if(money<200){
+                                    lostmoney = money;
+                                    money = 0;
+                                }else{
+                                    lostmoney = 200;
+                                    money-=200;
+                                }
+                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
+                                allhealup();
+                                System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                            }
                             return true;
                         }
                     }
                 }else{
+                    if(currentCity.equals("Pallet Town")){
+                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                        allhealup();
+                        System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                    }else{
+                        int lostmoney = 0;
+                        if(money<200){
+                            lostmoney = money;
+                            money = 0;
+                        }else{
+                            lostmoney = 200;
+                            money-=200;
+                        }
+                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
+                        allhealup();
+                        System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                    }
                     return true;
                 }
             }
