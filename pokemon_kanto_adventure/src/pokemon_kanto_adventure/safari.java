@@ -83,12 +83,16 @@ public class safari {
         }
         
         boolean success = false; //a booelan to check whether a sort pattern that fulfills all requirement is found
-
+        
+        if(list.size()==1&&list.contains("Machop")){
+            success = true;
+        }
+        
         //Arrange Machop to the position which is placed next to the heaviest pokemon
         ArrayList<String> initialList = list;
         String heaviestPokemon = "";
         double maxWeight = 0;
-        if (list.contains("Machop")) {
+        if (list.contains("Machop")&&list.size()>1) {
             //Use for loop to check which pokemon has the greatest weight (Excluding Machop)
             for (int i = 0; i < list.size(); i++) {
                 if (library.pokemon_weight.get(list.get(i)) > maxWeight && !(list.get(i).equals("Machop"))) {
