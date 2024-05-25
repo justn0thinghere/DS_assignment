@@ -99,6 +99,28 @@ public class Pokemon {
         inbattle = false;
         effectiveness = library.pokemon_effectiveness.get(name);
     }
+    public Pokemon(String n, int level, int currentHP) {
+        name = n;
+        this.level = level;
+        maxhp = library.pokemonhp.get(name).get(level); // Retrieve max HP from the library based on name and level
+        currenthp = currentHP;
+        nextevolution = library.evolution.get(name);
+        weight = library.pokemon_weight.get(name);
+        speed = library.pokemon_speed.get(name).get(level);
+        cute = library.pokemon_cute.get(name);
+        move1 = library.pokemon_moveset.get(name).get("move1");
+        move2 = library.pokemon_moveset.get(name).get("move2");
+        move3 = library.pokemon_moveset.get(name).get("move3");
+        move4 = library.pokemon_moveset.get(name).get("move4");
+        type1 = library.pokemon_type.get(name).get("type1");
+        type2 = library.pokemon_type.get(name).get("type2");
+        currentxp = calcxp();
+        lvl_to_evolve = library.evo_lvl.get(name);
+        wild = false;
+        inbattle = false;
+        faint = false;
+        effectiveness = library.pokemon_effectiveness.get(name);
+    }
     public int findmaxhp(){
         return maxhp;
     }

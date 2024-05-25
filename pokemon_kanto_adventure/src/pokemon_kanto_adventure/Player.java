@@ -29,6 +29,7 @@ public class Player {
     private int battlewon;
     private ArrayList<Pokemon> PC;
     private String currentCity;
+    private String savelocation;
     public Player(String n){
         name = n;
         for(int i = 0;i<8;i++){
@@ -104,10 +105,19 @@ public class Player {
     public String findCurrentCity(){
         return currentCity;
     }
+    public void setcurrentcity(String city){
+        currentCity = city;
+    }
     public void movetoCity(String city){
         System.out.printf("+%s+\n","-".repeat(90));
         System.out.println("Moving to " + city + "......");
         currentCity = city;
+    }
+    public void setSaveLocation(String file){
+        savelocation = file;
+    }
+    public String getSaveLocation(){
+        return savelocation;
     }
     public void obtainbadge(String badge){
         if(badge.equals("Boulder Badge")){
@@ -277,6 +287,25 @@ public class Player {
     }
     public String getName(){
         return name;
+    }
+    public void setName(String name){
+        this.name = name;
+    }
+    public void setNumOfBadge(int numofbadge) {
+        this.numofbadge = numofbadge;
+    }
+    public void setbadges(String[] badges) {
+        this.badges = badges;
+    }
+    public void setRivalRaceWins(int rivalracewins) {
+        this.rivalracewins = rivalracewins;
+    }
+
+    public void setBattleWon(int battlewon) {
+        this.battlewon = battlewon;
+    }
+    public void setMoney(int money) {
+        this.money = money;
     }
     public void showprofile(){
         System.out.printf("+%s+\n","-".repeat(90));
@@ -1710,12 +1739,24 @@ public class Player {
     }
     public void allhealup(){
         System.out.println("All your pokemons have been healed to their best status");
-        pokemon1.fullres();
-        pokemon2.fullres();
-        pokemon3.fullres();
-        pokemon4.fullres();
-        pokemon5.fullres();
-        pokemon6.fullres();
+        if(pokemon1!=null){
+            pokemon1.fullres();
+        }
+        if(pokemon2!=null){
+            pokemon2.fullres();
+        }
+        if(pokemon3!=null){
+            pokemon3.fullres();
+        }
+        if(pokemon4!=null){
+            pokemon4.fullres();
+        }
+        if(pokemon5!=null){
+            pokemon5.fullres();
+        }
+        if(pokemon6!=null){
+            pokemon6.fullres();
+        }
     }
     
     public void alterPC(Player player){

@@ -1,8 +1,14 @@
 
 package pokemon_kanto_adventure;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -16,11 +22,13 @@ public class Pokemon_kanto_adventure {
         /*
         while(true){
             title();
-            selectSave();
+            selectSave(player, player.getSaveLocation());
         }
         */
         library.readallfiles();
+        
         Player a = new Player("Jack");
+        /*
         a.obtainitems("Potion", 2);
         a.obtainitems("Great Ball", 3);
         a.addMoney(100000);
@@ -39,8 +47,9 @@ public class Pokemon_kanto_adventure {
         a.addPokemon(new Pokemon("Ponyta",15));
         a.addPokemon(new Pokemon("Pikachu",15));
         a.addPokemon(new Pokemon("Victreebel",50));
+        */
         title();
-        selectionPanel(a);
+        displayStartMenu(a);
         
     }
     //print pokemon title when boot game
@@ -54,23 +63,333 @@ public class Pokemon_kanto_adventure {
             System.out.println("File not found");
         }
     }
-    //select a save to start or create a new account
-    public static void selectSave(){
-        
+    public static void displayStartMenu(Player player) {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+        Player loadedPlayer = null;
+
+        while (running) {
+            System.out.println("+----------------------------------------------------------------------+");
+            System.out.println("Welcome to Pokemon - Kanto Adventures");
+            System.out.println("+----------------------------------------------------------------------+");
+
+            // Check if save files exist
+            boolean[] saveExists = new boolean[3];
+            for (int i = 0; i < 3; i++) {
+                saveExists[i] = saveFileExists("save" + (i + 1) + ".csv");
+            }
+
+            // Print the options based on save existence
+            System.out.println("[1] Load Game:");
+            System.out.println("a. Save 1 - " + (saveExists[0] ? getPlayerName("save1.csv") : "empty") +
+                    " b. Save 2 - " + (saveExists[1] ? getPlayerName("save2.csv") : "empty") +
+                    " c. Save 3 - " + (saveExists[2] ? getPlayerName("save3.csv") : "empty"));
+            System.out.println("[2] Start a new Adventure:");
+            if (saveExists[0] || saveExists[1] || saveExists[2]) {
+                System.out.println("a. Save 1 - " + (saveExists[0] ? "Override" : "new") +
+                        " b. Save 2 - " + (saveExists[1] ? "Override" : "new") +
+                        " c. Save 3 - " + (saveExists[2] ? "Override" : "new"));
+            } else {
+                System.out.println("a. Save 1 - new b. Save 2 - new c. Save 3 - new");
+            }
+            System.out.println("[3] Exit");
+            System.out.println("+----------------------------------------------------------------------+");
+            System.out.print("Your choice: ");
+
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1a":
+                // Load save 1
+                loadedPlayer = loadSave("save1.csv");
+                if (loadedPlayer != null) {
+                    player = loadedPlayer;
+                    selectionPanel(player);
+                } else {
+                    System.out.println("No saved game found.");
+                }
+                break;
+                case "1b":
+                // Load save 2
+                loadedPlayer = loadSave("save2.csv");
+                if (loadedPlayer != null) {
+                    player = loadedPlayer;
+                    selectionPanel(player);
+                } else {
+                    System.out.println("No saved game found.");
+                }
+                break;
+                case "1c":
+                // Load save 3
+                loadedPlayer = loadSave("save3.csv");
+                if (loadedPlayer != null) {
+                    player = loadedPlayer;
+                    selectionPanel(player);
+                } else {
+                    System.out.println("No saved game found.");
+                }
+                break;
+                case "2a":
+                // Start new adventure with save 1
+                startNewAdventure(player,"save1.csv");
+                selectionPanel(player);
+                break;
+                case "2b":
+                // Start new adventure with save 2
+                startNewAdventure(player,"save2.csv");
+                selectionPanel(player);
+                break;
+                case "2c":
+                // Start new adventure with save 3
+                startNewAdventure(player,"save3.csv");
+                selectionPanel(player);
+                break;
+                case "3":
+                exitGame();
+                running = false;
+                break;
+                default:
+                System.out.println("Invalid choice! Please choose again.");
+                break;
+            }
+        }
+    }
+    //print pokemon title when boot game
+    private static boolean saveFileExists(String filename) {
+        File file = new File(filename);
+        return file.exists();
+    }
+
+    private static String getPlayerName(String filename) {
+        Player loadedPlayer = loadSave(filename);
+        if (loadedPlayer != null) {
+            return loadedPlayer.getName();
+        } else {
+            return "empty";
+        }
+    }
+
+    public static void startNewAdventure(Player player, String saveFileName) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("OAK: Hello there! Welcome to the world of Pokémon! My name is Oak!");
+        System.out.println("People call me the Pokémon Prof! This world is inhabited by creatures");
+        System.out.println("called Pokémon! For some people, Pokémon are pets. Others use them for");
+        System.out.println("fights. Myself... I study Pokémon as a profession.");
+        System.out.println("OAK: First, what is your name?");
+        System.out.print("Enter your name: ");
+        String playerName = scanner.nextLine();
+        player.setName(playerName);
+        System.out.println("DEBUG: Player's name set to: " + player.getName());
+        System.out.println("OAK: Right! So your name is " + playerName + "! Welcome to the world of Pokemon.");
+        System.out.println("It's time to choose your starting Pokémon.");
+
+        // Present starter Pokémon options
+        System.out.println("+----------------------------------------------------------------------+");
+        System.out.println("[1] Bulbasaur [Grass - Level 5]");
+        System.out.println("[2] Squirtle [Water - Level 5]");
+        System.out.println("[3] Charmander [Fire - Level 5]");
+        System.out.println("+----------------------------------------------------------------------+");
+        System.out.print("Your choice: ");
+        int starterChoice = scanner.nextInt();
+
+        // Handle starter choice
+        switch (starterChoice) {
+            case 1:
+                System.out.println("OAK: You chose Bulbasaur, an amazing choice. Best of luck!");
+                player.addPokemon(new Pokemon("Bulbasaur", 5, false));
+                break;
+            case 2:
+                System.out.println("OAK: You chose Squirtle, an amazing choice. Best of luck!");
+                player.addPokemon(new Pokemon("Squirtle", 5, false));
+                break;
+            case 3:
+                System.out.println("OAK: You chose Charmander, an amazing choice. Best of luck!");
+                player.addPokemon(new Pokemon("Charmander", 5, false));
+                break;
+            default:
+                System.out.println("Invalid choice!");
+                return; // Return from method if choice is invalid
+            }
+        save(player, saveFileName);
+        player.setSaveLocation(saveFileName);
+        System.out.println(player.getSaveLocation());
     }
     //load save after select
-    public static void loadSave(){
+    private static Player loadSave(String filename) {
+        Player player = null;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+
+            // Skip the header line
+            br.readLine();
+
+            String line = br.readLine(); // Read the next line
+            if (line != null) {
+                String[] data = line.split(",");
+
+                if (data.length >= 39) { // Ensure that there are enough elements in the array
+                    String name = data[0];
+                    String currentCity = data[1].trim(); // Ensure to trim any leading or trailing whitespaces
+                    player = new Player(name);
+                    player.setcurrentcity(currentCity); // Update the current city
+
+                    // Load badges
+                    String[] badges = new String[8];
+                    for (int i = 2; i < 10; i++) {
+                        badges[i - 2] = data[i];
+                    }
+                    player.setbadges(badges);
+
+                    // Debugging badges
+                    
+                    // Load money, rival wins, and battles won
+                    player.setMoney(Integer.parseInt(data[10]));
+                    player.setRivalRaceWins(Integer.parseInt(data[11]));
+                    player.setBattleWon(Integer.parseInt(data[12]));
+
+                    // Parse Pokémon data for up to 6 Pokémon
+                    for (int i = 13; i < 31; i += 3) {
+                        if (i + 2 < data.length && !data[i].isEmpty() && !data[i + 1].isEmpty() && !data[i + 2].isEmpty()) {
+                        String pokemonName = data[i];
+                        int pokemonLevel = Integer.parseInt(data[i + 1]);
+                        int pokemonHP = Integer.parseInt(data[i + 2]);
+
+                        // Create and add the Pokémon to the player's team
+                        player.addPokemon(new Pokemon(pokemonName, pokemonLevel, pokemonHP));
+                    }
+                }
+
+                // Load items
+                    player.getItems().put("Potion", Integer.parseInt(data[31]));
+                    player.getItems().put("Super Potion", Integer.parseInt(data[32]));
+                    player.getItems().put("Revive", Integer.parseInt(data[33]));
+                    player.getItems().put("Poke Ball", Integer.parseInt(data[34]));
+                    player.getItems().put("Great Ball", Integer.parseInt(data[35]));
+                    player.getItems().put("Ultra Ball", Integer.parseInt(data[36]));
+                    player.getItems().put("X Attack", Integer.parseInt(data[37]));
+                    player.getItems().put("X Defend", Integer.parseInt(data[38]));
+                    player.getItems().put("X Speed", Integer.parseInt(data[39]));
+
+                    player.setSaveLocation(filename);
+                } else {
+                    System.err.println("Insufficient data in the save file.");
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("No saved file found");
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing Pokémon data. Make sure the data in the save file is correct.");
+        }
+        return player;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static void save(Player player, String saveFileName) {
+   
+
+    try {
+        FileOutputStream fw = new FileOutputStream(saveFileName);
+        PrintWriter pw = new PrintWriter(fw);
+        // Column headers for the CSV file
+        String columnHeaders = "PlayerName,CurrentCity,Badges1,Badges2,Badges3,Badges4,Badges5,Bagdes6,Badges7,Bagdes8,Money,RivalWins,BattlesWon," + // Player information
+                       "Poke1Name,Poke1Level,Poke1CurrentHP," + // Pokémon team
+                       "Poke2Name,Poke2Level,Poke2CurrentHP," +
+                       "Poke3Name,Poke3Level,Poke3CurrentHP," +
+                       "Poke4Name,Poke4Level,Poke4CurrentHP," +
+                       "Poke5Name,Poke5Level,Poke5CurrentHP," +
+                       "Poke6Name,Poke6Level,Poke6CurrentHP," +
+                       "Potion,SuperPotion,Revive,PokeBall,GreatBall,UltraBall," + // Items
+                       "XAttack,XDefend,XSpeed," +
+                       "PC1Name,PC1Level,PC1CurrentHP," + // Pokémon in PC
+                       "PC2Name,PC2Level,PC2CurrentHP," +
+                       "PC3Name,PC3Level,PC3CurrentHP," +
+                       "PC4Name,PC4Level,PC4CurrentHP," +
+                       "PC5Name,PC5Level,PC5CurrentHP," +
+                       "PC6Name,PC6Level,PC6CurrentHP";
+
+        // Write the column headers to the CSV file
+        pw.println(columnHeaders);
+
+
+        // Save player's name, current city, badges, money, rival race wins, and battles won
+        pw.print(player.getName()+ "," + player.findCurrentCity() + "," +
+                   formatBadges(player.getbadges()) + "," + player.findMoney() + "," +
+                   player.getrivalwins() + "," + player.getvictories());
         
+        // Save player's Pokémon team
+        savePokemon(pw, player.findPoke1());
+        savePokemon(pw, player.findPoke2());
+        savePokemon(pw, player.findPoke3());
+        savePokemon(pw, player.findPoke4());
+        savePokemon(pw, player.findPoke5());
+        savePokemon(pw, player.findPoke6());
+        
+        // Save player's items
+        pw.println("," + player.getItems().get("Potion") + "," + player.getItems().get("Super Potion") + "," +
+                   player.getItems().get("Revive") + "," + player.getItems().get("Poke Ball") + "," +
+                   player.getItems().get("Great Ball") + "," + player.getItems().get("Ultra Ball") + "," +
+                   player.getItems().get("X Attack") + "," + player.getItems().get("X Defend") + "," +
+                   player.getItems().get("X Speed"));
+        for (Pokemon pokemon : player.getPC()) {
+            pw.print(",");
+            if (pokemon != null) {
+                pw.print(pokemon.findname() + "," + pokemon.findlvl()+ "," + pokemon.findcurrenthp());
+            }
+        }
+        pw.close();
+        System.out.println("Game saved successfully.");
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+    }
+
+
+        // Helper method to save Pokémon data
+        private static void savePokemon(PrintWriter pw, Pokemon pokemon) {
+            if (pokemon != null) {
+                pw.print("," + pokemon.findname() + "," + pokemon.findlvl()+","+pokemon.findcurrenthp());
+            } else {
+                pw.print(","+","+","); // If no Pokémon, print empty values
+            }
+        }
+
+        // Helper method to format badges array
+    private static String formatBadges(String[] badges) {
+        StringBuilder formattedBadges = new StringBuilder();
+        for (String badge : badges) {
+            formattedBadges.append(badge).append(",");
+        }
+        // Remove the trailing comma
+        return formattedBadges.substring(0, formattedBadges.length() - 1);
+    }
+
+
+
+
+    private static void saveAndExit(Player player) {
+        save(player, player.getSaveLocation());
+        exitGame();
+    }
+
+    public static void exitGame() {
+        System.out.println("Exiting game...");
+        System.exit(0); // Exit the game
     }
     public static void guides(){
-        
-    }
-    //everytime a new account is created, mom will talk to you, prof oak will let you choose starter with lvl 5
-    public static void newPlayer(){
-        
-    }
-    //save progress by writing out
-    public static void save(){
         
     }
     public static void selectionPanel(Player player){
@@ -184,7 +503,7 @@ public class Pokemon_kanto_adventure {
                         player.alterPC(player);
                         break;
                     case 'h':
-                        save();
+                        save(player, player.getSaveLocation());
                         return false;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -281,7 +600,7 @@ public class Pokemon_kanto_adventure {
                         player.alterPC(player);
                         break;
                     case 'h':
-                        save();
+                        save(player, player.getSaveLocation());
                         return false;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -400,7 +719,7 @@ public class Pokemon_kanto_adventure {
                         player.alterPC(player);
                         break;
                     case 'h':
-                        save();
+                        save(player, player.getSaveLocation());
                         return false;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -519,7 +838,7 @@ public class Pokemon_kanto_adventure {
                         player.alterPC(player);
                         break;
                     case 'h':
-                        save();
+                        save(player, player.getSaveLocation());
                         return false;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -640,7 +959,7 @@ public class Pokemon_kanto_adventure {
                         player.alterPC(player);
                         break;
                     case 'h':
-                        save();
+                        save(player, player.getSaveLocation());
                         return false;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -764,7 +1083,7 @@ public class Pokemon_kanto_adventure {
                         player.alterPC(player);
                         break;
                     case 'h':
-                        save();
+                        save(player, player.getSaveLocation());
                         return false;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -880,7 +1199,7 @@ public class Pokemon_kanto_adventure {
                         player.alterPC(player);
                         break;
                     case 'h':
-                        save();
+                        save(player, player.getSaveLocation());
                         return false;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -1000,7 +1319,7 @@ public class Pokemon_kanto_adventure {
                         player.alterPC(player);
                         break;
                     case 'h':
-                        save();
+                        save(player, player.getSaveLocation());
                         return false;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -1121,7 +1440,7 @@ public class Pokemon_kanto_adventure {
                         player.alterPC(player);
                         break;
                     case 'h':
-                        save();
+                        save(player, player.getSaveLocation());
                         return false;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
@@ -1241,7 +1560,7 @@ public class Pokemon_kanto_adventure {
                         player.alterPC(player);
                         break;
                     case 'h':
-                        save();
+                        save(player, player.getSaveLocation());
                         return false;
                     default:
                         System.out.println("Invalid choice! Please choose again.");
