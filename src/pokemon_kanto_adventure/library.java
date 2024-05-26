@@ -190,7 +190,7 @@ public class library {
                 itemeff.put("catch",Integer.valueOf(values[5]));
                 itemeff.put("base_catch_rate",Integer.valueOf(values[6]));
                 itemeff.put("pokemon_75%",Integer.valueOf(values[7]));
-                itemeff.put("pokemon_50&",Integer.valueOf(values[8]));
+                itemeff.put("pokemon_50%",Integer.valueOf(values[8]));
                 itemeff.put("pokemon_25%",Integer.valueOf(values[9]));
                 itemeff.put("revive%",Integer.valueOf(values[10]));
                 itemeff.put("price",Integer.valueOf(values[11]));

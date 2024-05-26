@@ -29,6 +29,7 @@ public class Player {
     private int battlewon;
     private ArrayList<Pokemon> PC;
     private String currentCity;
+    private String savelocation;
     public Player(String n){
         name = n;
         for(int i = 0;i<8;i++){
@@ -104,10 +105,19 @@ public class Player {
     public String findCurrentCity(){
         return currentCity;
     }
+    public void setcurrentcity(String city){
+        currentCity = city;
+    }
     public void movetoCity(String city){
         System.out.printf("+%s+\n","-".repeat(90));
         System.out.println("Moving to " + city + "......");
         currentCity = city;
+    }
+    public void setSaveLocation(String file){
+        savelocation = file;
+    }
+    public String getSaveLocation(){
+        return savelocation;
     }
     public void obtainbadge(String badge){
         if(badge.equals("Boulder Badge")){
@@ -278,14 +288,41 @@ public class Player {
     public String getName(){
         return name;
     }
+    public void setName(String name){
+        this.name = name;
+    }
+    public void setNumOfBadge(int numofbadge) {
+        this.numofbadge = numofbadge;
+    }
+    public void setbadges(String[] badges) {
+        this.badges = badges;
+        for(String badge:badges){
+            if(!badge.equals("---")){
+                numofbadge++;
+            }
+        }
+    }
+    public void setRivalRaceWins(int rivalracewins) {
+        this.rivalracewins = rivalracewins;
+    }
+    public void wonabattle(){
+        battlewon++;
+    }
+    public void setBattleWon(int battlewon) {
+        this.battlewon = battlewon;
+    }
+    public void setMoney(int money) {
+        this.money = money;
+    }
     public void showprofile(){
         System.out.printf("+%s+\n","-".repeat(90));
         System.out.println("+-----------------Player Profile-----------------+");
         System.out.println("Player Name: "+ name);
+        System.out.println("Money: $ " + money);
         showbadges();
         showteam();
         System.out.println("Rival race wins: " + getrivalwins());
-        System.out.println("Battles won: " + battlewon);
+        System.out.println("Trainer battles won: " + battlewon);
         System.out.println("+------------------End of Player Profile------------------+");
     }
     public boolean teamfaint(){
@@ -306,29 +343,122 @@ public class Player {
                                                             allhealup();
                                                             System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
                                                         }else{
-                                                            System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $200");
+                                                            int lostmoney = 0;
+                                                            if(money<200){
+                                                                lostmoney = money;
+                                                                money = 0;
+                                                            }else{
+                                                                lostmoney = 200;
+                                                                money-=200;
+                                                            }
+                                                            System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
                                                             allhealup();
                                                             System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
                                                         }
                                                         return true; //if true, then all pokemons in the team is fainted and return true;
                                                     }
                                                 }else{
+                                                    if(currentCity.equals("Pallet Town")){
+                                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                                        allhealup();
+                                                        System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                                                    }else{
+                                                        int lostmoney = 0;
+                                                        if(money<200){
+                                                            lostmoney = money;
+                                                            money = 0;
+                                                        }else{
+                                                            lostmoney = 200;
+                                                            money-=200;
+                                                        }
+                                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
+                                                        allhealup();
+                                                        System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                                                    }
                                                     return true;
                                                 }
                                             }
                                         }else{
+                                            if(currentCity.equals("Pallet Town")){
+                                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                                allhealup();
+                                                System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                                            }else{
+                                                int lostmoney = 0;
+                                                if(money<200){
+                                                    lostmoney = money;
+                                                    money = 0;
+                                                }else{
+                                                    lostmoney = 200;
+                                                    money-=200;
+                                                }
+                                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
+                                                allhealup();
+                                                System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                                            }
                                             return true;
                                         }
                                     }
                                 }else{
+                                    if(currentCity.equals("Pallet Town")){
+                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                        allhealup();
+                                        System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                                    }else{
+                                        int lostmoney = 0;
+                                        if(money<200){
+                                            lostmoney = money;
+                                            money = 0;
+                                        }else{
+                                            lostmoney = 200;
+                                            money-=200;
+                                        }
+                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
+                                        allhealup();
+                                        System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                                    }
                                     return true;
                                 }
                             }
                         }else{
+                            if(currentCity.equals("Pallet Town")){
+                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                allhealup();
+                                System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                            }else{
+                                int lostmoney = 0;
+                                if(money<200){
+                                    lostmoney = money;
+                                    money = 0;
+                                }else{
+                                    lostmoney = 200;
+                                    money-=200;
+                                }
+                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
+                                allhealup();
+                                System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                            }
                             return true;
                         }
                     }
                 }else{
+                    if(currentCity.equals("Pallet Town")){
+                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                        allhealup();
+                        System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
+                    }else{
+                        int lostmoney = 0;
+                        if(money<200){
+                            lostmoney = money;
+                            money = 0;
+                        }else{
+                            lostmoney = 200;
+                            money-=200;
+                        }
+                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and was sent to the Pokemon Center, you lost $ " + lostmoney);
+                        allhealup();
+                        System.out.println("Nurse: Now your pokemons are all healed up, have a nice day!");
+                    }
                     return true;
                 }
             }
@@ -857,6 +987,7 @@ public class Player {
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
                         String line = input.nextLine();
+                        if(line.length()!=0){
                         if(line.charAt(0)=='y'&&line.length()==2){
                             int poke = line.charAt(1)-'0';
                             System.out.println("Selected pokemon on slot: " + poke);
@@ -990,6 +1121,9 @@ public class Player {
                         }else{
                             System.out.println("Invalid input");
                         }
+                        }else{
+                            System.out.println("Invalid input, please choose again");
+                        }
                     }
                     if(items.get("Potion")==0){
                         System.out.printf("+%s+\n","-".repeat(90));
@@ -1007,6 +1141,7 @@ public class Player {
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
                         String line = input.nextLine();
+                        if(line.length()!=0){
                         if(line.charAt(0)=='y'&&line.length()==2){
                             int poke = line.charAt(1)-'0';
                             System.out.println("Selected pokemon on slot: " + poke);
@@ -1140,6 +1275,9 @@ public class Player {
                         }else{
                             System.out.println("Invalid input");
                         }
+                        }else{
+                            System.out.println("Invalid input, please choose again");
+                        }
                     }
                     if(items.get("Super Potion")==0){
                         System.out.printf("+%s+\n","-".repeat(90));
@@ -1157,6 +1295,7 @@ public class Player {
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
                         String line = input.nextLine();
+                        if(line.length()!=0){
                         if(line.charAt(0)=='y'&&line.length()==2){
                             int poke = line.charAt(1)-'0';
                             System.out.println("Selected pokemon on slot: " + poke);
@@ -1290,6 +1429,9 @@ public class Player {
                         }else{
                             System.out.println("Invalid input");
                         }
+                        }else{
+                            System.out.println("Invalid choice, please choose again");
+                        }
                     }
                     if(items.get("Hyper Potion")==0){
                         System.out.printf("+%s+\n","-".repeat(90));
@@ -1307,6 +1449,7 @@ public class Player {
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
                         String line = input.nextLine();
+                        if(line.length()!=0){
                         if(line.charAt(0)=='y'&&line.length()==2){
                             int poke = line.charAt(1)-'0';
                             System.out.println("Selected pokemon on slot: " + poke);
@@ -1440,6 +1583,9 @@ public class Player {
                         }else{
                             System.out.println("Invalid input");
                         }
+                        }else{
+                            System.out.println("Invalid input, please choose again");
+                        }
                     }
                     if(items.get("Max Potion")==0){
                         System.out.printf("+%s+\n","-".repeat(90));
@@ -1469,6 +1615,7 @@ public class Player {
                         System.out.println("Do you want to use it(y/n)? On which pokemon(1-6)? e.g: y1 to use at pokemon 1,n to not use and exit");
                         showteam();
                         String line = input.nextLine();
+                        if(line.length()!=0){
                         if(line.charAt(0)=='y'&&line.length()==2){
                             int poke = line.charAt(1)-'0';
                             System.out.println("Selected pokemon on slot: " + poke);
@@ -1578,6 +1725,9 @@ public class Player {
                         }else{
                             System.out.println("Invalid input");
                         }
+                        }else{
+                            System.out.println("Invalid choice, choose again");
+                        }
                     }
                     if(items.get("Revive")==0){
                         System.out.printf("+%s+\n","-".repeat(90));
@@ -1597,11 +1747,143 @@ public class Player {
     }
     public void allhealup(){
         System.out.println("All your pokemons have been healed to their best status");
-        pokemon1.fullres();
-        pokemon2.fullres();
-        pokemon3.fullres();
-        pokemon4.fullres();
-        pokemon5.fullres();
-        pokemon6.fullres();
+        if(pokemon1!=null){
+            pokemon1.fullres();
+        }
+        if(pokemon2!=null){
+            pokemon2.fullres();
+        }
+        if(pokemon3!=null){
+            pokemon3.fullres();
+        }
+        if(pokemon4!=null){
+            pokemon4.fullres();
+        }
+        if(pokemon5!=null){
+            pokemon5.fullres();
+        }
+        if(pokemon6!=null){
+            pokemon6.fullres();
+        }
+    }
+    
+    public void alterPC(Player player){
+        Scanner input = new Scanner(System.in);
+        if(PC.isEmpty()){
+            System.out.println("Your PC is empty.");
+        }else{
+            all:
+            while(true){
+                System.out.println("+--------------PC---------------+");
+                for(int i = 0;i<PC.size();i++){
+                    Pokemon poke = PC.get(i);
+                    System.out.println((i+1) + ". " + poke.findname() + " [ level " + poke.findlvl() + " ] ");
+                }
+                System.out.println((PC.size() + 1) + ". Back");
+                System.out.print("Enter your choice: ");
+                String choice_st = input.nextLine();
+                if(isNum(choice_st)){
+                    int choice = Integer.parseInt(choice_st);
+                    if(choice<=PC.size()&&choice>0){
+                        Pokemon poke = PC.get(choice-1);
+                        System.out.println("You chose: " + poke.findname() + " [ level " + poke.findlvl() + " ] ");
+                        PCpokeChoice(poke);
+                    }else if(choice==PC.size()+1){
+                        break all;
+                    }else{
+                        System.out.println("Invalid choice, please choose again");
+                    }
+                }else{
+                    System.out.println("Invalid choice, please choose again");
+                }
+            }
+        }
+    }
+    public void PCpokeChoice(Pokemon poke){
+        Scanner input = new Scanner(System.in);
+        System.out.println("+------Pokemon info------+");
+        poke.showPokemonInfo();
+        System.out.println("Do you want to withdraw this pokemon(y-yes/other input-no and go back)?");
+        String choice = input.nextLine();
+        if(choice.equals("y")){
+            if(pokemon1==null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 1.");
+                pokemon1 = poke;
+                PC.remove(poke);
+            }else if(pokemon2 == null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 2.");
+                pokemon2 = poke;
+                PC.remove(poke);
+            }else if(pokemon3==null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 3.");
+                pokemon3 = poke;
+                PC.remove(poke);
+            }else if(pokemon4==null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 4.");
+                pokemon4 = poke;
+                PC.remove(poke);
+            }else if(pokemon5 == null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 5.");
+                pokemon5 = poke;
+                PC.remove(poke);
+            }else if(pokemon6 == null){
+                System.out.println("You successfully withdrew this pokemon to pokemon slot 6.");
+                pokemon6 = poke;
+                PC.remove(poke);
+            }else{
+                swapp:
+                while(true){
+                System.out.println("Your team is full. Which pokemon do you want to swap with?(1-6 to swap)/(7 to cancel)");
+                String swap_st = input.nextLine();
+                if(isNum(swap_st)){
+                    int swap = Integer.parseInt(swap_st);
+                    switch(swap){
+                        case 1:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon1.findname() + " [ level " + pokemon1.findlvl() + " ] ");
+                            Pokemon temp = pokemon1;
+                            pokemon1 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 2:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon2.findname() + " [ level " + pokemon2.findlvl() + " ] ");
+                            temp = pokemon2;
+                            pokemon2 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 3:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon3.findname() + " [ level " + pokemon3.findlvl() + " ] ");
+                            temp = pokemon3;
+                            pokemon3 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 4:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon4.findname() + " [ level " + pokemon4.findlvl() + " ] ");
+                            temp = pokemon4;
+                            pokemon4 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 5:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon5.findname() + " [ level " + pokemon5.findlvl() + " ] ");
+                            temp = pokemon5;
+                            pokemon5 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 6:
+                            System.out.println("You swapped " + poke.findname() + " [ level " + poke.findlvl() +" ] with " + pokemon6.findname() + " [ level " + pokemon6.findlvl() + " ] ");
+                            temp = pokemon6;
+                            pokemon6 = poke;
+                            PC.set(PC.indexOf(poke), temp);
+                            break swapp;
+                        case 7:
+                            break swapp;
+                        default:
+                            System.out.println("Invalid choice");
+                    }
+                }else{
+                    System.out.println("Invalid choice, please choose again");
+                }
+                }
+            }
+        }
     }
 }

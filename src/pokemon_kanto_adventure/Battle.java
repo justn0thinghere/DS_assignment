@@ -1,12 +1,14 @@
 
 package pokemon_kanto_adventure;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Battle {
     private Player player;
     private String opponent;
+    private boolean win;
     private Pokemon your_pokemon;
     private Pokemon foe_pokemon;
     private double atk;
@@ -16,9 +18,383 @@ public class Battle {
     private double foe_def;
     private double foe_sp;
     public Battle(Player p,String opp){
+        Random r = new Random();
+        win = false;
         player = p;
         opponent = opp;
+        ArrayList<Pokemon> opponent_pokemons = library.Trainers.get(opp);
+        if(!p.findPoke1().isFaint()){ //at least one pokemon is not fainted because if all fainted will automatically be healed
+            your_pokemon = p.findPoke1();
+        }else if(!p.findPoke2().isFaint()&&p.findPoke2()!=null){
+            your_pokemon = p.findPoke2();
+        }else if(!p.findPoke3().isFaint()&&p.findPoke3()!=null){
+            your_pokemon = p.findPoke3();
+        }else if(!p.findPoke4().isFaint()&&p.findPoke4()!=null){
+            your_pokemon = p.findPoke4();
+        }else if(!p.findPoke5().isFaint()&&p.findPoke5()!=null){
+            your_pokemon = p.findPoke5();
+        }else if(p.findPoke6()!=null){ //at least last pokemon is not fainted
+            your_pokemon = p.findPoke6();
+        }
+        foe_pokemon = opponent_pokemons.get(0);
+        int foe_fainted_pokemons = 0;
+        System.out.println("You sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+        System.out.println(opponent + " sent out " + foe_pokemon.findname() + "[ level " + foe_pokemon.findlvl() + " ]");
+        System.out.println(your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ] [ " + your_pokemon.findcurrenthp() + "/" + your_pokemon.findmaxhp() + " ] ");
+        System.out.println("VS");
+        System.out.println(foe_pokemon.findname() + "[ level " + foe_pokemon.findlvl() + " ] [ " + foe_pokemon.findcurrenthp() + "/" + foe_pokemon.findmaxhp() + " ] ");
         resetstat();
+        System.out.println("");
+        System.out.println("Tips: ");
+        foe_pokemon.showWeakness();
+        foe_pokemon.showResistance();
+        System.out.println("");
+        Scanner input = new Scanner(System.in);
+        all:
+        while(!player.teamfaint()||foe_fainted_pokemons!=opponent_pokemons.size()){
+            boolean foe_faint = false;
+            boolean your_faint = false;
+            boolean move = false;
+            Move your_move = null;
+            boolean alter_pokemons = false;
+            boolean bag_items = false;
+            //your desicion
+            decision:
+            while(true){
+            //-move
+            //-pokemon
+            //-bag
+            //-run -- break
+                System.out.printf("+%s+\n","-".repeat(90));
+                System.out.println(your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ] [ " + your_pokemon.findcurrenthp() + "/" + your_pokemon.findmaxhp() + " ] ");
+                System.out.println("VS");
+                System.out.println(foe_pokemon.findname() + "[ level " + foe_pokemon.findlvl() + " ] [ " + foe_pokemon.findcurrenthp() + "/" + foe_pokemon.findmaxhp() + " ] ");
+                System.out.println("1. Fight");
+                System.out.println("2. Pokemons");
+                System.out.println("3. Bag");
+                System.out.println("4. Check status");
+                System.out.println("5. Run");
+                System.out.println("Your move(Choose 1-5)");
+                String choice_st = input.nextLine();
+                if(isNum(choice_st)){
+                    int choice = Integer.parseInt(choice_st);
+                    switch(choice){
+                        case 1:
+                            your_move = chooseMove();
+                            if(your_move!=null){
+                                move = true;
+                                break decision;
+                            }
+                            break;
+                        case 2:
+                            alter_pokemons = pokemons();
+                            if(alter_pokemons){
+                                break decision;
+                            }
+                            break;
+                        case 3:
+                            bag_items = bag();
+                            if(bag_items){
+                                break decision;
+                            }
+                        case 4:
+                            System.out.println("Your atk: " + atk);
+                            System.out.println("Your def: " + def);
+                            System.out.println("Your sp: " + sp);
+                            System.out.println("Foe atk: " + foe_atk);
+                            System.out.println("Foe def: " + foe_def);
+                            System.out.println("Foe sp: " + foe_sp);
+                            break;
+                        case 5:
+                            System.out.println("There is no running away from a true battle between trainers!");
+                            break;
+                        default:
+                            System.out.println("Invalid choice, choose again");
+                    }
+                }else{
+                    System.out.println("Invalid input");
+                }
+            }
+            
+            //enemy decision
+            Move foe_move = null;
+            int foe_decs = r.nextInt(4)+1;
+            switch(foe_decs){
+                case 1:
+                    foe_move = new Move(foe_pokemon.findmov1(),foe_pokemon.findlvl());
+                    break;
+                case 2:
+                    foe_move = new Move(foe_pokemon.findmov2(),foe_pokemon.findlvl());
+                    break;
+                case 3:
+                    foe_move = new Move(foe_pokemon.findmov3(),foe_pokemon.findlvl());
+                    break;
+                case 4:
+                    foe_move = new Move(foe_pokemon.findmov4(),foe_pokemon.findlvl());
+                    break;
+            }
+            
+            
+            //if swap and use items then your pokemon cannot move
+            if(alter_pokemons||bag_items){
+                opponentmove(foe_move);
+            }else if(move){
+            //calculate move order
+                int your_move_order = your_move.getOrder();
+                int foe_move_order = foe_move.getOrder();
+            //calculate speed
+                double your_speed = your_pokemon.findspeed();
+                double foe_speed = foe_pokemon.findspeed();
+                double sp_rate = 1;
+                double foe_sp_rate = 1;
+                if(sp>0){
+                    sp_rate = (1.0*(2+sp))/(2*1.0);
+                }else if(sp<0){
+                    sp_rate = (1.0*2)/(2+(-1*sp));
+                }
+            
+                if(foe_sp>0){
+                    foe_sp_rate = (1.0*(2+foe_sp))/(2*1.0);
+                }else if(foe_sp<0){
+                    foe_sp_rate = (1.0*2)/(2+(-1*foe_sp));
+                }
+                your_speed = your_speed*sp_rate;
+                foe_speed = foe_speed*foe_sp_rate;
+                
+                //determine who moves first
+                if(your_move_order>foe_move_order){
+                    //you move first
+                    yourmove(your_move);
+                    if(foe_pokemon.isFaint()){
+                        foe_faint = true;
+                    }else{
+                        opponentmove(foe_move);
+                    }
+                }else if(foe_move_order>your_move_order){
+                    //foe move first
+                    opponentmove(foe_move);
+                    if(your_pokemon.isFaint()){
+                        your_faint = true;
+                    }else{
+                        yourmove(your_move);
+                    }
+                }else{ //same move order
+                    if(your_speed>foe_speed){
+                        //you move first
+                        yourmove(your_move);
+                        if(foe_pokemon.isFaint()){
+                            foe_faint = true;
+                        }else{
+                            opponentmove(foe_move);
+                        }
+                    }else if(foe_speed>your_speed){
+                        //foe move first
+                        opponentmove(foe_move);
+                        if(your_pokemon.isFaint()){
+                            your_faint = true;
+                        }else{
+                            yourmove(your_move);
+                        }
+                    }else{ //same speed
+                        int rando = r.nextInt(2); //coin flip to determine who move first 50 50
+                        if(rando == 0){
+                            //you move first
+                            yourmove(your_move);
+                            if(foe_pokemon.isFaint()){
+                                foe_faint = true;
+                            }else{
+                                opponentmove(foe_move);
+                            }
+                        }else{
+                            //foe move first
+                            opponentmove(foe_move);
+                            if(your_pokemon.isFaint()){
+                                your_faint = true;
+                            }else{
+                                yourmove(your_move);
+                            }
+                        }
+                    }
+                }
+            //calculate stat change
+            //calculate damage
+            //inflict dmg,stat change,heal,dmgheal
+            //if slower is not faint, slower move
+            //inflict dmg,stat change,heal,dmgheal
+        
+            
+                
+            
+            }
+            //if opponent poke faint 
+                //obtainxp()
+                //check if all opponent pokemon is fainted
+                if(foe_faint||foe_pokemon.isFaint()){
+                    your_pokemon.obtainxp(foe_pokemon.findlvl()*5);
+                    foe_fainted_pokemons++;
+                    if(foe_fainted_pokemons!=opponent_pokemons.size()){
+                        foe_pokemon = opponent_pokemons.get(foe_fainted_pokemons);
+                        System.out.printf("+%s+\n","-".repeat(90));
+                        System.out.println(opponent + " sent out " + foe_pokemon.findname() + "[ level " + foe_pokemon.findlvl() + " ]");
+                        System.out.println("");
+                        System.out.println("Tips: ");
+                        foe_pokemon.showWeakness();
+                        foe_pokemon.showResistance();
+                        System.out.println("");
+                        resetfoestatus();
+                    }else{
+                        System.out.printf("+%s+\n","-".repeat(90));
+                        System.out.println("Congratulations! You have defeated " + opponent + ", you earned $ " + library.TrainerReward.get(opponent));
+                        player.addMoney(library.TrainerReward.get(opponent));
+                        resetfoestatus();
+                        win = true;
+                        player.wonabattle();
+                        library.readAllTrainers(); // reset all trainers' pokemon
+                        break all;
+                    }
+                }
+                
+                
+            //if your pokemon faint
+            //-check allfaint?
+            //-next pokemon
+            //-run -- break
+                if(your_faint||your_pokemon.isFaint()){
+                    if(player.teamfaint()){
+                        break all;
+                    }else{
+                            switchpoke:
+                            while(true){
+                                player.showteam();
+                                System.out.println("Choose a pokemon(1-6) to switch: ");
+                                String choice_st = input.nextLine();
+                                if(isNum(choice_st)){
+                                    int choice = Integer.parseInt(choice_st);
+                                    switch(choice){
+                                        case 1:
+                                            if(player.findPoke1().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke1().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke1();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            break;
+                                        case 2:
+                                            if(player.findPoke2()!=null){
+                                            if(player.findPoke2().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke2().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke2();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            }else{
+                                                System.out.println("This pokemon slot is empty");
+                                            }
+                                            break;
+                                        case 3:
+                                            if(player.findPoke3()!=null){
+                                            if(player.findPoke3().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke3().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke3();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            }else{
+                                                System.out.println("This pokemon slot is empty");
+                                            }
+                                            break;
+                                        case 4:
+                                            if(player.findPoke4()!=null){
+                                            if(player.findPoke4().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke4().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke4();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            }else{
+                                                System.out.println("This pokemon slot is empty");
+                                            }
+                                            break;
+                                        case 5:
+                                            if(player.findPoke5()!=null){
+                                            if(player.findPoke5().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke5().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke5();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            }else{
+                                                System.out.println("This pokemon slot is empty");
+                                            }
+                                            break;
+                                        case 6:
+                                            if(player.findPoke6()!=null){
+                                            if(player.findPoke6().equals(your_pokemon)){
+                                                System.out.println("This pokemon is already in battle and has fainted!");
+                                            }else if(player.findPoke6().isFaint()){
+                                                System.out.println("This pokemon has already fainted!");
+                                            }else{
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                your_pokemon.changebattlestatus(false);
+                                                your_pokemon = player.findPoke6();
+                                                your_pokemon.changebattlestatus(true);
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
+                                                resetyourstatus();
+                                                break switchpoke;
+                                            }
+                                            }else{
+                                                System.out.println("This pokemon slot is empty");
+                                            }
+                                            break;
+                                        default:
+                                            System.out.println("Invalid choice, choose again!");
+                                    }
+                                }else{
+                                    System.out.println("Invalid choice, choose again!");
+                                }
+                            }
+                        
+                    }
+                }
+        }
+    }
+    public boolean getwin(){
+        return win;
     }
     public Battle(Player p,Pokemon wild){
         Random r = new Random();
@@ -36,7 +412,7 @@ public class Battle {
         }else if(p.findPoke6()!=null){ //at least last pokemon is not fainted
             your_pokemon = p.findPoke6();
         }
-        System.out.println("You sent out " + your_pokemon.findname());
+        System.out.println("You sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
         foe_pokemon = wild;
         System.out.println(your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ] [ " + your_pokemon.findcurrenthp() + "/" + your_pokemon.findmaxhp() + " ] ");
         System.out.println("VS");
@@ -139,7 +515,7 @@ public class Battle {
             
             //if swap and use items then your pokemon cannot move
             if(alter_pokemons||bag_items){
-                
+                opponentmove(foe_move);
             }else if(move){
             //calculate move order
                 int your_move_order = your_move.getOrder();
@@ -226,6 +602,8 @@ public class Battle {
         
             
                 
+            
+            }
             //if wild faint 
                 //obtainxp()
                 //break
@@ -258,11 +636,11 @@ public class Battle {
                                             }else if(player.findPoke1().isFaint()){
                                                 System.out.println("This pokemon has already fainted!");
                                             }else{
-                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 your_pokemon.changebattlestatus(false);
                                                 your_pokemon = player.findPoke1();
                                                 your_pokemon.changebattlestatus(true);
-                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 resetyourstatus();
                                                 break switchpoke;
                                             }
@@ -274,11 +652,11 @@ public class Battle {
                                             }else if(player.findPoke2().isFaint()){
                                                 System.out.println("This pokemon has already fainted!");
                                             }else{
-                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 your_pokemon.changebattlestatus(false);
                                                 your_pokemon = player.findPoke2();
                                                 your_pokemon.changebattlestatus(true);
-                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 resetyourstatus();
                                                 break switchpoke;
                                             }
@@ -293,11 +671,11 @@ public class Battle {
                                             }else if(player.findPoke3().isFaint()){
                                                 System.out.println("This pokemon has already fainted!");
                                             }else{
-                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 your_pokemon.changebattlestatus(false);
                                                 your_pokemon = player.findPoke3();
                                                 your_pokemon.changebattlestatus(true);
-                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 resetyourstatus();
                                                 break switchpoke;
                                             }
@@ -312,11 +690,11 @@ public class Battle {
                                             }else if(player.findPoke4().isFaint()){
                                                 System.out.println("This pokemon has already fainted!");
                                             }else{
-                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 your_pokemon.changebattlestatus(false);
                                                 your_pokemon = player.findPoke4();
                                                 your_pokemon.changebattlestatus(true);
-                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 resetyourstatus();
                                                 break switchpoke;
                                             }
@@ -331,11 +709,11 @@ public class Battle {
                                             }else if(player.findPoke5().isFaint()){
                                                 System.out.println("This pokemon has already fainted!");
                                             }else{
-                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 your_pokemon.changebattlestatus(false);
                                                 your_pokemon = player.findPoke5();
                                                 your_pokemon.changebattlestatus(true);
-                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 resetyourstatus();
                                                 break switchpoke;
                                             }
@@ -350,11 +728,11 @@ public class Battle {
                                             }else if(player.findPoke6().isFaint()){
                                                 System.out.println("This pokemon has already fainted!");
                                             }else{
-                                                System.out.print("You withdrew " + your_pokemon.findname());
+                                                System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 your_pokemon.changebattlestatus(false);
                                                 your_pokemon = player.findPoke6();
                                                 your_pokemon.changebattlestatus(true);
-                                                System.out.println(" and sent out " + your_pokemon.findname());
+                                                System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                                                 resetyourstatus();
                                                 break switchpoke;
                                             }
@@ -377,7 +755,6 @@ public class Battle {
                         }
                     }
                 }
-            }
         }
     }
     public boolean isNum(String s){
@@ -778,11 +1155,11 @@ public class Battle {
                         }else if(player.findPoke1().isFaint()){
                             System.out.println("This pokemon is already fainted");
                         }else{
-                            System.out.print("You withdrew " + your_pokemon.findname());
+                            System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             your_pokemon.changebattlestatus(false);
                             your_pokemon = player.findPoke1();
                             your_pokemon.changebattlestatus(true);
-                            System.out.println(" and sent out " + your_pokemon.findname());
+                            System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             resetyourstatus();
                             return true;
                         }
@@ -792,11 +1169,11 @@ public class Battle {
                         }else if(player.findPoke2().isFaint()){
                             System.out.println("This pokemon is already fainted");
                         }else{
-                            System.out.print("You withdrew " + your_pokemon.findname());
+                            System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             your_pokemon.changebattlestatus(false);
                             your_pokemon = player.findPoke2();
                             your_pokemon.changebattlestatus(true);
-                            System.out.println(" and sent out " + your_pokemon.findname());
+                            System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             resetyourstatus();
                             return true;
                         }
@@ -806,11 +1183,11 @@ public class Battle {
                         }else if(player.findPoke3().isFaint()){
                             System.out.println("This pokemon is already fainted");
                         }else{
-                            System.out.print("You withdrew " + your_pokemon.findname());
+                            System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             your_pokemon.changebattlestatus(false);
                             your_pokemon = player.findPoke3();
                             your_pokemon.changebattlestatus(true);
-                            System.out.println(" and sent out " + your_pokemon.findname());
+                            System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             resetyourstatus();
                             return true;
                         }
@@ -820,11 +1197,11 @@ public class Battle {
                         }else if(player.findPoke4().isFaint()){
                             System.out.println("This pokemon is already fainted");
                         }else{
-                            System.out.print("You withdrew " + your_pokemon.findname());
+                            System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             your_pokemon.changebattlestatus(false);
                             your_pokemon = player.findPoke4();
                             your_pokemon.changebattlestatus(true);
-                            System.out.println(" and sent out " + your_pokemon.findname());
+                            System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             resetyourstatus();
                             return true;
                         }
@@ -834,11 +1211,11 @@ public class Battle {
                         }else if(player.findPoke5().isFaint()){
                             System.out.println("This pokemon is already fainted");
                         }else{
-                            System.out.print("You withdrew " + your_pokemon.findname());
+                            System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             your_pokemon.changebattlestatus(false);
                             your_pokemon = player.findPoke5();
                             your_pokemon.changebattlestatus(true);
-                            System.out.println(" and sent out " + your_pokemon.findname());
+                            System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             resetyourstatus();
                             return true;
                         }
@@ -848,11 +1225,11 @@ public class Battle {
                         }else if(player.findPoke6().isFaint()){
                             System.out.println("This pokemon is already fainted");
                         }else{
-                            System.out.print("You withdrew " + your_pokemon.findname());
+                            System.out.print("You withdrew " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             your_pokemon.changebattlestatus(false);
                             your_pokemon = player.findPoke6();
                             your_pokemon.changebattlestatus(true);
-                            System.out.println(" and sent out " + your_pokemon.findname());
+                            System.out.println(" and sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]");
                             resetyourstatus();
                             return true;
                         }
@@ -972,8 +1349,8 @@ public class Battle {
                     System.out.println("Do you want to use it(y to use/any other input to not use)?");
                     String use = input.nextLine();
                     if(use.equals("y")){
-                        System.out.println("You used a Poke Ball!");
                         if(foe_pokemon.wild()){
+                            System.out.println("You used a Poke Ball!");
                             int roll = r.nextInt(101);
                             int success = 0;
                             if(foe_hp_percentage<=0.25){
@@ -1012,8 +1389,8 @@ public class Battle {
                     System.out.println("Do you want to use it(y to use/any other input to not use)?");
                     String use = input.nextLine();
                     if(use.equals("y")){
-                        System.out.println("You used a Great Ball!");
                         if(foe_pokemon.wild()){
+                            System.out.println("You used a Great Ball!");
                             int roll = r.nextInt(101);
                             int success = 0;
                             if(foe_hp_percentage<=0.25){
@@ -1051,8 +1428,8 @@ public class Battle {
                     System.out.println("Do you want to use it(y to use/any other input to not use)?");
                     String use = input.nextLine();
                     if(use.equals("y")){
-                        System.out.println("You used a Ultra Ball!");
                         if(foe_pokemon.wild()){
+                            System.out.println("You used a Ultra Ball!");
                             int roll = r.nextInt(101);
                             int success = 0;
                             if(foe_hp_percentage<=0.25){
@@ -1866,6 +2243,44 @@ public class Battle {
                 }
             }
         }
+        //in some occasion stats can be >6 and <-6 so adjust them back tp 6 or -6
+        if(atk>6){
+            atk=6;
+        }
+        if(atk<-6){
+            atk=-6;
+        }
+        if(def>6){
+            def=6;
+        }
+        if(def<-6){
+            def=-6;
+        }
+        if(sp>6){
+            sp=6;
+        }
+        if(sp<-6){
+            sp=-6;
+        }
+        
+        if(foe_atk>6){
+            foe_atk=6;
+        }
+        if(foe_atk<-6){
+            foe_atk=-6;
+        }
+        if(foe_def>6){
+            foe_def=6;
+        }
+        if(foe_def<-6){
+            foe_def=-6;
+        }
+        if(foe_sp>6){
+            foe_sp=6;
+        }
+        if(foe_sp<-6){
+            foe_sp=-6;
+        }
     }
     
     public void yourmove(Move your_move){
@@ -2119,6 +2534,43 @@ public class Battle {
                     your_pokemon.heal(healing);
                 }
             }
+        }
+        if(atk>6){
+            atk=6;
+        }
+        if(atk<-6){
+            atk=-6;
+        }
+        if(def>6){
+            def=6;
+        }
+        if(def<-6){
+            def=-6;
+        }
+        if(sp>6){
+            sp=6;
+        }
+        if(sp<-6){
+            sp=-6;
+        }
+        
+        if(foe_atk>6){
+            foe_atk=6;
+        }
+        if(foe_atk<-6){
+            foe_atk=-6;
+        }
+        if(foe_def>6){
+            foe_def=6;
+        }
+        if(foe_def<-6){
+            foe_def=-6;
+        }
+        if(foe_sp>6){
+            foe_sp=6;
+        }
+        if(foe_sp<-6){
+            foe_sp=-6;
         }
     }
 }

@@ -99,6 +99,30 @@ public class Pokemon {
         inbattle = false;
         effectiveness = library.pokemon_effectiveness.get(name);
     }
+    
+    public Pokemon(String n, int l, int currentHP,int currentXP) {
+        name = n;
+        this.level = l;
+        maxhp = library.pokemonhp.get(name).get(level); // Retrieve max HP from the library based on name and level
+        currenthp = currentHP;
+        currentxp = currentXP;
+        nextevolution = library.evolution.get(name);
+        weight = library.pokemon_weight.get(name);
+        speed = library.pokemon_speed.get(name).get(level);
+        cute = library.pokemon_cute.get(name);
+        move1 = library.pokemon_moveset.get(name).get("move1");
+        move2 = library.pokemon_moveset.get(name).get("move2");
+        move3 = library.pokemon_moveset.get(name).get("move3");
+        move4 = library.pokemon_moveset.get(name).get("move4");
+        type1 = library.pokemon_type.get(name).get("type1");
+        type2 = library.pokemon_type.get(name).get("type2");
+        
+        lvl_to_evolve = library.evo_lvl.get(name);
+        wild = false;
+        inbattle = false;
+        faint = false;
+        effectiveness = library.pokemon_effectiveness.get(name);
+    }
     public int findmaxhp(){
         return maxhp;
     }
@@ -186,6 +210,7 @@ public class Pokemon {
                 System.out.println(" - " + types[i]);
             }
         }
+        System.out.println("moves");
     }
     public void showWeakness(){
         System.out.println(name + " is weak against: ");
@@ -261,6 +286,12 @@ public class Pokemon {
     public boolean isFaint(){
         return faint;
     }
+    public void setcurrenthp(int h){
+        currenthp = h;
+    }
+    public void setxp(int x){
+        currentxp = x;
+    }
     public void takedmg(int d){
         System.out.printf("+%s+\n","-".repeat(90));
         System.out.println(name + " took " + d + " damage");
@@ -275,15 +306,19 @@ public class Pokemon {
     }
     public void obtainxp(int e){
         if(level!=max_level){
+            if(e!=0){
             System.out.printf("+%s+\n","-".repeat(90));
-            System.out.println(name + " obtained " + e + " xp!");
+            
             if(e<currentxp){
                 currentxp = currentxp - e;
+                System.out.println(name + " obtained " + e + " xp!");
             }else{
+                System.out.println(name + " obtained " + currentxp + " xp!");
                 e = e-currentxp;
                 currentxp = 0;
                 levelup();
                 obtainxp(e);
+            }
             }
         }else{
             System.out.println("This pokemon is at max level and will not obatin any more xp");
