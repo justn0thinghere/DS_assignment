@@ -305,7 +305,8 @@ public class Pokemon {
         }
     }
     public void obtainxp(int e){
-        if(level!=max_level&&e!=0){
+        if(level!=max_level){
+            if(e!=0){
             System.out.printf("+%s+\n","-".repeat(90));
             
             if(e<currentxp){
@@ -317,6 +318,7 @@ public class Pokemon {
                 currentxp = 0;
                 levelup();
                 obtainxp(e);
+            }
             }
         }else{
             System.out.println("This pokemon is at max level and will not obatin any more xp");
