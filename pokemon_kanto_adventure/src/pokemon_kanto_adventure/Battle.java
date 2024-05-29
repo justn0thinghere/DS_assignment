@@ -40,6 +40,7 @@ public class Battle {
         }else if(p.findPoke6()!=null){ //at least last pokemon is not fainted
             your_pokemon = p.findPoke6();
         }
+        your_pokemon.changebattlestatus(true); //change player's pokemon's battle status to true
         foe_pokemon = opponent_pokemons.get(0); //opponent_pokemons is an ArrayList that contains the data of the opponents' pokemon, get(0) means the first pokemon in the opponent's team
         //counter of how many pokemons in the opponent's team have fainted, when a pokemon of the opponent is defeated, this counter increases by 1, 
         //and when this counter is equal to the size of the opponent's team's size, opponent loses and player wins, which will be shown in the codes later
@@ -261,7 +262,7 @@ public class Battle {
                         player.addMoney(library.TrainerReward.get(opponent)); //player obtains money according to trainer, this value can be obtained from the library.TrainerReward Hashmap using opponent's name as key 
                         resetfoestatus(); //reset all the stats of opponent's pokemon status
                         win = true; //set win to true
-                        player.wonabattle(); //wonabattle method increases the battleswon value in the Player object by 1
+                        player.wonbattle(); //wonbattle method increases the battleswon value in the Player object by 1
                         library.readAllTrainers(); // reset all trainers' pokemon
                         break all; //end the whole loop
                     }
@@ -424,6 +425,7 @@ public class Battle {
         }else if(p.findPoke6()!=null){ //at least last pokemon is not fainted
             your_pokemon = p.findPoke6();
         }
+        your_pokemon.changebattlestatus(true);//change layer's pokemon's battle status to true
         System.out.println("You sent out " + your_pokemon.findname() + "[ level " + your_pokemon.findlvl() + " ]"); //display player sent ou pokemon message
         foe_pokemon = wild;
         //display basic information of both pokemons
@@ -1374,7 +1376,7 @@ public class Battle {
                                 success = library.pokemon_items.get("Poke Ball").get("base_catch_rate"); //get the catch rate of PokeBall when wild pokemon's current hp is above 75%
                             }
                             if(success>roll){ //if success is higher than roll, pokemon is successully caught
-                                foe_pokemon.caught(); //caught() is a method that changes the wild attribute of a pokemon to false indicating that it is not wild anymore
+                                foe_pokemon.caught(); //caught() is a method that changes the wild attribute and battle status of a pokemon to false indicating that it is not wild anymore
                                 System.out.println("You caught " + foe_pokemon.findname() + " !"); //display caught message
                                 player.addPokemon(foe_pokemon); //add the caught pokemon to player's team or PC
 

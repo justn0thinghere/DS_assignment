@@ -14,34 +14,34 @@ import java.util.Scanner;
  */
 public class Player {
     
-    private String name;
-    private String [] badges = new String[8];
-    private int numofbadge;
-    private Pokemon pokemon1;
+    private String name; //name of the player
+    private String [] badges = new String[8]; //badges of the player
+    private int numofbadge; //numberofbadge of the player
+    private Pokemon pokemon1; //pokemon1-6 of the player
     private Pokemon pokemon2;
     private Pokemon pokemon3;
     private Pokemon pokemon4;
     private Pokemon pokemon5;
     private Pokemon pokemon6;
-    private int money;
-    private HashMap<String,Integer>items;
-    private int rivalracewins;
-    private int battlewon;
-    private ArrayList<Pokemon> PC;
-    private String currentCity;
-    private String savelocation;
-    public Player(String n){
-        name = n;
-        for(int i = 0;i<8;i++){
+    private int money; //money of the player
+    private HashMap<String,Integer>items;//items of the player, contained in a HashMap with name of items as keys and number of items as values
+    private int rivalracewins; //number of rivalrace won
+    private int battlewon; //number of battle won
+    private ArrayList<Pokemon> PC; //pokemons in PC
+    private String currentCity;//currentCity of player
+    private String savelocation;//savefile of player
+    public Player(String n){ //create a new player with name
+        name = n; //set name to n
+        for(int i = 0;i<8;i++){ //set all badges to ---
             badges[i]="---";
         }
-        pokemon1=null;
+        pokemon1=null;//set all pokemon in team to nothing
         pokemon2=null;
         pokemon3=null;
         pokemon4=null;
         pokemon5=null;
         pokemon6=null;
-        items = new HashMap<>();
+        items = new HashMap<>(); //set up items HashMap with keys, and all values to 0
         items.put("Poke Ball", 0);
         items.put("Great Ball", 0);
         items.put("Ultra Ball", 0);
@@ -53,74 +53,74 @@ public class Player {
         items.put("X Defend", 0);
         items.put("X Speed", 0);
         items.put("Revive",0);
-        numofbadge = 0;
-        PC = new ArrayList<Pokemon>();
-        currentCity = "Pallet Town";
+        numofbadge = 0;//set number of badges to 0
+        PC = new ArrayList<Pokemon>();//initialize PC with an empty ArrayList of Pokemons
+        currentCity = "Pallet Town";//set currentCity to Pallet Town
     }
-    public void addPokemon(Pokemon a){
-        if(pokemon1==null){
+    public void addPokemon(Pokemon a){ //add a pokemon
+        if(pokemon1==null){ //if pokemon1 is empty, set pokemon1 to that pokemon
             pokemon1 = a;
-        }else if(pokemon2==null){
+        }else if(pokemon2==null){//if pokemon1 not empty but pokemon2 is empty, set pokemon2 to that pokemon
             pokemon2 = a;
-        }else if(pokemon3==null){
+        }else if(pokemon3==null){//if pokemon2 not empty but pokemon3 is empty, set pokemon3 to that pokemon
             pokemon3 = a;
-        }else if(pokemon4==null){
+        }else if(pokemon4==null){//if pokemon3 not empty but pokemon4 is empty, set pokemon4 to that pokemon
             pokemon4 = a;
-        }else if(pokemon5==null){
+        }else if(pokemon5==null){//if pokemon4 not empty but pokemon5 is empty, set pokemon5 to that pokemon
             pokemon5 = a;
-        }else if(pokemon6==null){
+        }else if(pokemon6==null){//if pokemon5 not empty but pokemon6 is empty, set pokemon6 to that pokemon
             pokemon6 = a;
-        }else{
+        }else{//if player team is full, display message below and add the pokemon to PC
             System.out.println("Team is full, " + a.findname() + " is moved to PC");
             PC.add(a);
         }
     }
-    public int findMoney(){
+    public int findMoney(){//return money
         return money;
     }
-    public void deductMoney(int ded){
+    public void deductMoney(int ded){//deduct money
         money-=ded;
     }
-    public void addMoney(int add){
+    public void addMoney(int add){//add money
         money+=add;
     }
-    public Pokemon findPoke1(){
+    public Pokemon findPoke1(){//return pokemon1
         return pokemon1;
     }
-    public Pokemon findPoke2(){
+    public Pokemon findPoke2(){//return pokemon2
         return pokemon2;
     }
-    public Pokemon findPoke3(){
+    public Pokemon findPoke3(){//return pokemon3
         return pokemon3;
     }
-    public Pokemon findPoke4(){
+    public Pokemon findPoke4(){//return pokemon4
         return pokemon4;
     }
-    public Pokemon findPoke5(){
+    public Pokemon findPoke5(){//return pokemon5
         return pokemon5;
     }
-    public Pokemon findPoke6(){
+    public Pokemon findPoke6(){//return pokemon6
         return pokemon6;
     }
-    public String findCurrentCity(){
+    public String findCurrentCity(){//return currentCity
         return currentCity;
     }
-    public void setcurrentcity(String city){
+    public void setcurrentcity(String city){//set currentCity
         currentCity = city;
     }
-    public void movetoCity(String city){
-        System.out.printf("+%s+\n","-".repeat(90));
+    public void movetoCity(String city){//move to new city
+        System.out.printf("+%s+\n","-".repeat(90)); //display moving to the city message
         System.out.println("Moving to " + city + "......");
-        currentCity = city;
+        currentCity = city;//set currentCity to new city
     }
-    public void setSaveLocation(String file){
+    public void setSaveLocation(String file){//set savelocation
         savelocation = file;
     }
-    public String getSaveLocation(){
+    public String getSaveLocation(){//return savelocation
         return savelocation;
     }
-    public void obtainbadge(String badge){
-        if(badge.equals("Boulder Badge")){
+    public void obtainbadge(String badge){//obtain a new badge
+        if(badge.equals("Boulder Badge")){//if a badge is obtained, put them to their corresponding locations
             badges[0] = badge;
         }else if(badge.equals("Cascade Badge")){
             badges[1] = badge;
@@ -137,46 +137,46 @@ public class Player {
         }else if(badge.equals("Earth Badge")){
             badges[7] = badge;
         }
-        numofbadge++;
-        if(numofbadge==8){
+        numofbadge++;//increase number of badges by 1
+        if(numofbadge==8){//if number of badges is 8, display win message
             System.out.println("Congrats!! you have finished the game and won against all the gym leaders, you are now the new Champion of the Kanto Region!!");
         }
     }
-    public String[] getbadges(){
+    public String[] getbadges(){ //return badges
         return badges;
     }
-    public void showbadges(){
+    public void showbadges(){ //show player badges
         System.out.println("Badges: ");
         for(int i = 0;i<badges.length;i++){
             System.out.println(badges[i] + " ");
         }
     }
     
-    public void startrivalrace(){
-        RivalRace race = new RivalRace();
-        race.simulation();
+    public void startrivalrace(){ //start a rival race
+        RivalRace race = new RivalRace(); //create a new RivalRace() object
+        race.simulation(); //find the best path
         
-        while(!currentCity.equals(race.getDestination())){
-            ArrayList<String> neighboringCities = library.kantoMap.getNeighbours(currentCity);
-            System.out.printf("+%s+\n","-".repeat(90));
+        while(!currentCity.equals(race.getDestination())){ //while player have not arrive at the destination of the race
+            ArrayList<String> neighboringCities = library.kantoMap.getNeighbours(currentCity);//get the list of neighboring cities of the current city of the player
+            System.out.printf("+%s+\n","-".repeat(90));//show the current city player is at
             System.out.println("You are now at: " + currentCity);
-            System.out.println("Move to the next correct location: ");
+            System.out.println("Move to the next correct location: ");//print all the choices to go to
             for (int i = 0; i < neighboringCities.size(); i++) {
                 System.out.println((i+1) + ". " + neighboringCities.get(i));
             }
             Scanner sc = new Scanner(System.in);
-            System.out.print("Select a location: ");
-            String selection = sc.nextLine();
-            if(isNum(selection)){
-                int choice = Integer.parseInt(selection)-1;
+            System.out.print("Select a location: ");//prompt player to enter the choice
+            String selection = sc.nextLine();//receive choice
+            if(isNum(selection)){//check choice format
+                int choice = Integer.parseInt(selection)-1;//turn choice to integer
                 if(choice<neighboringCities.size()){
-                    System.out.println("You selected " + neighboringCities.get(choice));
-                    String newCity = neighboringCities.get(choice);
-                    movetoCity(newCity);
-                    if(!currentCity.equals(race.getStack().pop())){
-                        System.out.printf("+%s+\n","-".repeat(90));
-                        System.out.println("Oops, you went the wrong way! You lost this race, better luck next time!");
-                        break;
+                    System.out.println("You selected " + neighboringCities.get(choice));//display message of player's choice
+                    String newCity = neighboringCities.get(choice); //set new city to the city in the list corresponding to that choice
+                    movetoCity(newCity);//move to the new city
+                    if(!currentCity.equals(race.getStack().pop())){ //if the new city is not the next destination of the shortest path
+                        System.out.printf("+%s+\n","-".repeat(90));//player loses the rival race because they did not chose the correct location for the shortest path
+                        System.out.println("Oops, you went the wrong way! You lost this race, better luck next time!");//display lose message
+                        break;//end the loop
                     }
                 }else{
                     System.out.printf("+%s+\n","-".repeat(90));
@@ -187,28 +187,28 @@ public class Player {
                 System.out.println("Invalid choice! Please choose again.");
             }
         }
-        if(currentCity.equals(race.getDestination())){
-            System.out.printf("+%s+\n","-".repeat(90));
+        if(currentCity.equals(race.getDestination())){//when loop ends, if player is at the destination of the rival race, player wins the rival race
+            System.out.printf("+%s+\n","-".repeat(90));//display win message
             System.out.println("Congratulations, you have reach the finish line and won the race! You got $1000 for winning!");
-            addMoney(1000);
-            rivalracewins++;
+            addMoney(1000);//obtain money
+            rivalracewins++;//increase rival race wins by 1
         }
     }
     
-    public void obtainitems(String n,int i){
+    public void obtainitems(String n,int i){ //obtain a number of items
         int old = items.get(n);
         int neww = old + i;
         items.replace(n,old ,neww);
     }
-    public void deditems(String n,int i){
+    public void deditems(String n,int i){ //deduct a number of items
         int old = items.get(n);
         int neww = old - i;
         items.replace(n,old ,neww);
     }
-    public HashMap<String,Integer>getItems(){
+    public HashMap<String,Integer>getItems(){ //get the HashMap of items and their numbers
         return items;
     }
-    public void showitems(){
+    public void showitems(){ //show all the items and their numbers
         System.out.println("1. Poke Ball: " + items.get("Poke Ball"));
         System.out.println("2. Great Ball: " + items.get("Great Ball"));
         System.out.println("3. Ultra Ball: " + items.get("Ultra Ball"));
@@ -221,42 +221,42 @@ public class Player {
         System.out.println("10. X Speed: " + items.get("X Speed"));
         System.out.println("11. Revive: " + items.get("Revive"));
     }
-    public void setPoke1(Pokemon poke){
+    public void setPoke1(Pokemon poke){//set pokemon1 to poke
         pokemon1 = poke;
     }
-    public void setPoke2(Pokemon poke){
+    public void setPoke2(Pokemon poke){//set pokemon2 to poke
         pokemon2 = poke;
     }
-    public void setPoke3(Pokemon poke){
+    public void setPoke3(Pokemon poke){//set pokemon3 to poke
         pokemon3 = poke;
     }
-    public void setPoke4(Pokemon poke){
+    public void setPoke4(Pokemon poke){//set pokemon4 to poke
         pokemon4 = poke;
     }
-    public void setPoke5(Pokemon poke){
+    public void setPoke5(Pokemon poke){//set pokemon5 to poke
         pokemon5 = poke;
     }
-    public void setPoke6(Pokemon poke){
+    public void setPoke6(Pokemon poke){//set pokemon6 to poke
         pokemon6 = poke;
     }
-    public int getrivalwins(){
+    public int getrivalwins(){//return rivalracewins
         return rivalracewins;
     }
-    public int getvictories(){
+    public int getvictories(){//return battlewon
         return battlewon;
     }
-    public ArrayList<Pokemon> getPC(){
+    public ArrayList<Pokemon> getPC(){//return PC
         return PC;
     }
-    public void wonbattle(){
+    public void wonbattle(){//player wins a trainer battle
         battlewon++;
     }
-    public void showPC(){
+    public void showPC(){//show all pokemons in PC
         for(int i = 0;i<PC.size();i++){
             System.out.println(PC.get(i).findname());
         }
     }
-    public void showteam(){
+    public void showteam(){//show all pokemons in the team
         System.out.printf("+%s+\n","-".repeat(90));
         System.out.println("+--------------------Pokemons--------------------+");
         if(pokemon1!=null)
@@ -285,16 +285,16 @@ public class Player {
             System.out.printf("+%s+\n","-".repeat(90));
         System.out.println("+--------------------End of pokemon list--------------------+");
     }
-    public String getName(){
+    public String getName(){//return name
         return name;
     }
-    public void setName(String name){
+    public void setName(String name){//set name
         this.name = name;
     }
-    public void setNumOfBadge(int numofbadge) {
+    public void setNumOfBadge(int numofbadge) {//set number of badge
         this.numofbadge = numofbadge;
     }
-    public void setbadges(String[] badges) {
+    public void setbadges(String[] badges) {//set badges
         this.badges = badges;
         for(String badge:badges){
             if(!badge.equals("---")){
@@ -302,19 +302,16 @@ public class Player {
             }
         }
     }
-    public void setRivalRaceWins(int rivalracewins) {
+    public void setRivalRaceWins(int rivalracewins) {//set rivalracewins
         this.rivalracewins = rivalracewins;
     }
-    public void wonabattle(){
-        battlewon++;
-    }
-    public void setBattleWon(int battlewon) {
+    public void setBattleWon(int battlewon) {//set battlewon
         this.battlewon = battlewon;
     }
-    public void setMoney(int money) {
+    public void setMoney(int money) { //set money
         this.money = money;
     }
-    public void showprofile(){
+    public void showprofile(){ //show player profile
         System.out.printf("+%s+\n","-".repeat(90));
         System.out.println("+-----------------Player Profile-----------------+");
         System.out.println("Player Name: "+ name);
@@ -325,7 +322,7 @@ public class Player {
         System.out.println("Trainer battles won: " + battlewon);
         System.out.println("+------------------End of Player Profile------------------+");
     }
-    public boolean teamfaint(){
+    public boolean teamfaint(){ //check if the whole team is fainted
         if(pokemon1!=null){ // check if pokemon1 is nothing, if is nothing then player does not have pokemon, return false, else player has at least one pokemon
             if(pokemon1.isFaint()){ //check if the first pokemon is fainted
                 if(pokemon2!=null){ //if first pokemon is fainted, check if player have second pokemon, if no, means player only have one pokemon and it is fainted, hence all pokemons are fainted and return true
@@ -338,11 +335,11 @@ public class Player {
                                             if(pokemon5.isFaint()){ //check if 5th pokemon is fainted
                                                 if(pokemon6!=null){ //if 5th pokemon is fainted, check if player have 6th pokemon, if no, means player only have 5 pokemons, hence all pokemons are fainted and return true
                                                     if(pokemon6.isFaint()){ //check if 6th pokemon is fainted
-                                                        if(currentCity.equals("Pallet Town")){
-                                                            System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                                        if(currentCity.equals("Pallet Town")){ //if yes, if player is at Pallet Town
+                                                            System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom"); //player will be sent to Mum to heal up and no penalty
                                                             allhealup();
                                                             System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
-                                                        }else{
+                                                        }else{ //if player is not at Pallet Town, player loses 200 money as penalty and is sent to Pokemon Center to heal up
                                                             int lostmoney = 0;
                                                             if(money<200){
                                                                 lostmoney = money;
@@ -357,12 +354,12 @@ public class Player {
                                                         }
                                                         return true; //if true, then all pokemons in the team is fainted and return true;
                                                     }
-                                                }else{
-                                                    if(currentCity.equals("Pallet Town")){
-                                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                                }else{ 
+                                                    if(currentCity.equals("Pallet Town")){//if player is at Pallet Town
+                                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");//player will be sent to Mum to heal up and no penalty
                                                         allhealup();
                                                         System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
-                                                    }else{
+                                                    }else{//if player is not at Pallet Town, player loses 200 money as penalty and is sent to Pokemon Center to heal up
                                                         int lostmoney = 0;
                                                         if(money<200){
                                                             lostmoney = money;
@@ -379,11 +376,11 @@ public class Player {
                                                 }
                                             }
                                         }else{
-                                            if(currentCity.equals("Pallet Town")){
-                                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                            if(currentCity.equals("Pallet Town")){//if player is at Pallet Town
+                                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");//player will be sent to Mum to heal up and no penalty
                                                 allhealup();
                                                 System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
-                                            }else{
+                                            }else{//if player is not at Pallet Town, player loses 200 money as penalty and is sent to Pokemon Center to heal up
                                                 int lostmoney = 0;
                                                 if(money<200){
                                                     lostmoney = money;
@@ -400,11 +397,11 @@ public class Player {
                                         }
                                     }
                                 }else{
-                                    if(currentCity.equals("Pallet Town")){
-                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                                    if(currentCity.equals("Pallet Town")){//if player is at Pallet Town
+                                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");//player will be sent to Mum to heal up and no penalty
                                         allhealup();
                                         System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
-                                    }else{
+                                    }else{//if player is not at Pallet Town, player loses 200 money as penalty and is sent to Pokemon Center to heal up
                                         int lostmoney = 0;
                                         if(money<200){
                                             lostmoney = money;
@@ -421,11 +418,11 @@ public class Player {
                                 }
                             }
                         }else{
-                            if(currentCity.equals("Pallet Town")){
-                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                            if(currentCity.equals("Pallet Town")){//if player is at Pallet Town
+                                System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");//player will be sent to Mum to heal up and no penalty
                                 allhealup();
                                 System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
-                            }else{
+                            }else{//if player is not at Pallet Town, player loses 200 money as penalty and is sent to Pokemon Center to heal up
                                 int lostmoney = 0;
                                 if(money<200){
                                     lostmoney = money;
@@ -442,11 +439,11 @@ public class Player {
                         }
                     }
                 }else{
-                    if(currentCity.equals("Pallet Town")){
-                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");
+                    if(currentCity.equals("Pallet Town")){//if player is at Pallet Town
+                        System.out.println("Uh Oh, all your pokemons have fainted, you whited out and is sent to Mom");//player will be sent to Mum to heal up and no penalty
                         allhealup();
                         System.out.println("Mom: Looks like you really had a harsh battle, but don't give up, keep on working hard, good luck!");
-                    }else{
+                    }else{//if player is not at Pallet Town, player loses 200 money as penalty and is sent to Pokemon Center to heal up
                         int lostmoney = 0;
                         if(money<200){
                             lostmoney = money;
@@ -463,9 +460,9 @@ public class Player {
                 }
             }
         }
-        return false;
+        return false;//if there is at least one pokemon not fainted, return false
     }
-    public void alterteam(){
+    public void alterteam(){ //player choose to alter team
         Scanner input = new Scanner(System.in);
         all:
         while(true){
