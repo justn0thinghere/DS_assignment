@@ -99,11 +99,13 @@ public class Pokemon {
         inbattle = false;
         effectiveness = library.pokemon_effectiveness.get(name);
     }
-    public Pokemon(String n, int level, int currentHP) {
+    
+    public Pokemon(String n, int l, int currentHP,int currentXP) {
         name = n;
-        this.level = level;
+        this.level = l;
         maxhp = library.pokemonhp.get(name).get(level); // Retrieve max HP from the library based on name and level
         currenthp = currentHP;
+        currentxp = currentXP;
         nextevolution = library.evolution.get(name);
         weight = library.pokemon_weight.get(name);
         speed = library.pokemon_speed.get(name).get(level);
@@ -114,7 +116,7 @@ public class Pokemon {
         move4 = library.pokemon_moveset.get(name).get("move4");
         type1 = library.pokemon_type.get(name).get("type1");
         type2 = library.pokemon_type.get(name).get("type2");
-        currentxp = calcxp();
+        
         lvl_to_evolve = library.evo_lvl.get(name);
         wild = false;
         inbattle = false;
@@ -304,6 +306,7 @@ public class Pokemon {
     }
     public void obtainxp(int e){
         if(level!=max_level){
+            if(e!=0){
             System.out.printf("+%s+\n","-".repeat(90));
             
             if(e<currentxp){
@@ -315,6 +318,7 @@ public class Pokemon {
                 currentxp = 0;
                 levelup();
                 obtainxp(e);
+            }
             }
         }else{
             System.out.println("This pokemon is at max level and will not obatin any more xp");

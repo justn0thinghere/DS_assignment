@@ -180,11 +180,11 @@ public class Player {
                     }
                 }else{
                     System.out.printf("+%s+\n","-".repeat(90));
-                    System.out.println("Invalid input, choose again");
+                    System.out.println("Invalid choice! Please choose again.");
                 }
             }else{
                 System.out.printf("+%s+\n","-".repeat(90));
-                System.out.println("Invalid input, choose again");
+                System.out.println("Invalid choice! Please choose again.");
             }
         }
         if(currentCity.equals(race.getDestination())){
@@ -258,7 +258,7 @@ public class Player {
     }
     public void showteam(){
         System.out.printf("+%s+\n","-".repeat(90));
-        System.out.println("---Pokemons---");
+        System.out.println("+--------------------Pokemons--------------------+");
         if(pokemon1!=null)
             System.out.println("1. " + pokemon1.findname() + " Lvl: " + pokemon1.findlvl() + " HP: " + pokemon1.findcurrenthp() + " / " + pokemon1.findmaxhp());
         else
@@ -283,7 +283,7 @@ public class Player {
             System.out.println("6. " + pokemon6.findname() + " Lvl: " + pokemon6.findlvl() + " HP: " + pokemon6.findcurrenthp() + " / " + pokemon6.findmaxhp());
         else
             System.out.printf("+%s+\n","-".repeat(90));
-        System.out.println("---End of pokemon list---");
+        System.out.println("+--------------------End of pokemon list--------------------+");
     }
     public String getName(){
         return name;
@@ -296,11 +296,18 @@ public class Player {
     }
     public void setbadges(String[] badges) {
         this.badges = badges;
+        for(String badge:badges){
+            if(!badge.equals("---")){
+                numofbadge++;
+            }
+        }
     }
     public void setRivalRaceWins(int rivalracewins) {
         this.rivalracewins = rivalracewins;
     }
-
+    public void wonabattle(){
+        battlewon++;
+    }
     public void setBattleWon(int battlewon) {
         this.battlewon = battlewon;
     }
@@ -311,10 +318,11 @@ public class Player {
         System.out.printf("+%s+\n","-".repeat(90));
         System.out.println("+-----------------Player Profile-----------------+");
         System.out.println("Player Name: "+ name);
+        System.out.println("Money: $ " + money);
         showbadges();
         showteam();
         System.out.println("Rival race wins: " + getrivalwins());
-        System.out.println("Battles won: " + battlewon);
+        System.out.println("Trainer battles won: " + battlewon);
         System.out.println("+------------------End of Player Profile------------------+");
     }
     public boolean teamfaint(){
@@ -518,10 +526,10 @@ public class Player {
                 case 7:
                     break all;
                 default:
-                    System.out.println("Invalid choice");
+                    System.out.println("Invalid choice! Please choose again.");
             }
             }else{
-                System.out.println("Invalid input format");
+                System.out.println("Invalid choice! Please choose again.");
             }
         }
     }
@@ -577,10 +585,10 @@ public class Player {
                             case 5:
                                 break moves;
                             default:
-                                System.out.println("Invalid choice");
+                                System.out.println("Invalid choice! Please choose again.");
                         }
                         }else{
-                            System.out.println("Invalid input format");
+                            System.out.println("Invalid choice! Please choose again.");
                         }
                     }
                     break;
@@ -702,10 +710,10 @@ public class Player {
                         case 12:
                             break itemmm;
                         default:
-                            System.out.println("Invalid choice");
+                            System.out.println("Invalid choice! Please choose again.");
                     }
                     }else{
-                        System.out.println("Invalid input format");
+                        System.out.println("Invalid choice! Please choose again.");
                     }
                     }
                     break;
@@ -881,19 +889,19 @@ public class Player {
                         case 7:
                             break;
                         default:
-                            System.out.println("Invalid choice");
+                            System.out.println("Invalid choice! Please choose again.");
                     }
                     }else{
-                        System.out.println("Invalid input format");
+                        System.out.println("Invalid choice! Please choose again.");
                     }
                     break;
                 case 4:
                     break all;
                 default:
-                    System.out.println("Invalid choice");
+                    System.out.println("Invalid choice! Please choose again.");
             }
             }else{
-                System.out.println("Invalid input format");
+                System.out.println("Invalid choice! Please choose again.");
             }
         }
     }
@@ -904,7 +912,7 @@ public class Player {
             System.out.printf("+%s+\n","-".repeat(90));
             System.out.println("+--------------------Bag--------------------+");
             showitems();
-            System.out.println("+----------------End of Bag-----------------+");
+            System.out.println("+--------------------End of Bag--------------------+");
             System.out.println("Choose an item(1-11)/12 to exit");
             String choice_st = input.nextLine();
             if(isNum(choice_st)){
@@ -946,10 +954,10 @@ public class Player {
                     case 12:
                         break all;
                     default:
-                        System.out.println("Invalid choice");
+                        System.out.println("Invalid choice! Please choose again.");
                 }
             }else{
-                System.out.println("Invalid input format");
+                System.out.println("Invalid choice! Please choose again.");
             }
         }
     }
@@ -1105,16 +1113,16 @@ public class Player {
                                     }
                                     break;
                                 default:
-                                    System.out.println("Invalid pokemon number");
+                                    System.out.println("Invalid choice! Please choose again.");
                                     break;
                             }
                         }else if(line.charAt(0)=='n'){
                             break;
                         }else{
-                            System.out.println("Invalid input");
+                            System.out.println("Invalid choice! Please choose again.");
                         }
                         }else{
-                            System.out.println("Invalid input, please choose again");
+                            System.out.println("Invalid choice! Please choose again.");
                         }
                     }
                     if(items.get("Potion")==0){
@@ -1259,16 +1267,16 @@ public class Player {
                                     }
                                     break;
                                 default:
-                                    System.out.println("Invalid pokemon number");
+                                    System.out.println("Invalid choice! Please choose again.");
                                     break;
                             }
                         }else if(line.charAt(0)=='n'){
                             break;
                         }else{
-                            System.out.println("Invalid input");
+                            System.out.println("Invalid choice! Please choose again.");
                         }
                         }else{
-                            System.out.println("Invalid input, please choose again");
+                            System.out.println("Invalid choice! Please choose again.");
                         }
                     }
                     if(items.get("Super Potion")==0){
@@ -1413,13 +1421,13 @@ public class Player {
                                     }
                                     break;
                                 default:
-                                    System.out.println("Invalid pokemon number");
+                                    System.out.println("Invalid choice! Please choose again.");
                                     break;
                             }
                         }else if(line.charAt(0)=='n'){
                             break;
                         }else{
-                            System.out.println("Invalid input");
+                            System.out.println("Invalid choice! Please choose again.");
                         }
                         }else{
                             System.out.println("Invalid choice, please choose again");
@@ -1567,16 +1575,16 @@ public class Player {
                                     }
                                     break;
                                 default:
-                                    System.out.println("Invalid pokemon number");
+                                    System.out.println("Invalid choice! Please choose again.");
                                     break;
                             }
                         }else if(line.charAt(0)=='n'){
                             break;
                         }else{
-                            System.out.println("Invalid input");
+                            System.out.println("Invalid choice! Please choose again.");
                         }
                         }else{
-                            System.out.println("Invalid input, please choose again");
+                            System.out.println("Invalid choice! Please choose again.");
                         }
                     }
                     if(items.get("Max Potion")==0){
@@ -1709,16 +1717,16 @@ public class Player {
                                     }
                                     break;
                                 default:
-                                    System.out.println("Invalid pokemon number");
+                                    System.out.println("Invalid choice! Please choose again.");
                                     break;
                             }
                         }else if(line.charAt(0)=='n'){
                             break;
                         }else{
-                            System.out.println("Invalid input");
+                            System.out.println("Invalid choice! Please choose again.");
                         }
                         }else{
-                            System.out.println("Invalid choice, choose again");
+                            System.out.println("Invalid choice! Please choose again.");
                         }
                     }
                     if(items.get("Revive")==0){
@@ -1766,7 +1774,7 @@ public class Player {
         }else{
             all:
             while(true){
-                System.out.println("+--------------PC---------------+");
+                System.out.println("+--------------------PC--------------------+");
                 for(int i = 0;i<PC.size();i++){
                     Pokemon poke = PC.get(i);
                     System.out.println((i+1) + ". " + poke.findname() + " [ level " + poke.findlvl() + " ] ");
@@ -1793,7 +1801,7 @@ public class Player {
     }
     public void PCpokeChoice(Pokemon poke){
         Scanner input = new Scanner(System.in);
-        System.out.println("+------Pokemon info------+");
+        System.out.println("+--------------------Pokemon info--------------------+");
         poke.showPokemonInfo();
         System.out.println("Do you want to withdraw this pokemon(y-yes/other input-no and go back)?");
         String choice = input.nextLine();
@@ -1869,7 +1877,7 @@ public class Player {
                         case 7:
                             break swapp;
                         default:
-                            System.out.println("Invalid choice");
+                            System.out.println("Invalid choice! Please choose again.");
                     }
                 }else{
                     System.out.println("Invalid choice, please choose again");
